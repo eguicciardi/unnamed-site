@@ -1,8 +1,10 @@
 ---
 import SiteLayout from "../layouts/SiteLayout.astro";
-import ColorGroup from "../components/styleguide/ColorGroup.astro";
+import ColorGroup, {
+	type SwatchDef,
+} from "../components/styleguide/ColorGroup.astro";
 
-const surfaceTokens = [
+const surfaceTokens: SwatchDef[] = [
 	{ label: "canvas", className: "bg-canvas", variable: "--color-canvas" },
 	{ label: "surface", className: "bg-surface", variable: "--color-surface" },
 	{
@@ -17,7 +19,7 @@ const surfaceTokens = [
 	},
 ];
 
-const borderTokens = [
+const borderTokens: SwatchDef[] = [
 	{
 		label: "border",
 		className: "border-border",
