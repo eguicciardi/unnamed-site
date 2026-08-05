@@ -1,0 +1,24 @@
+---
+interface Props {
+	label: string;
+	className: string;
+	stateLabel: string;
+	disabled?: boolean;
+}
+
+const { label, className, stateLabel, disabled = false } = Astro.props;
+---
+
+<div class="flex flex-col gap-2">
+	<button
+		type="button"
+		disabled={disabled}
+		class:list={[
+			"rounded-md px-4 py-2 text-sm font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50",
+			className,
+		]}
+	>
+		{label}
+	</button>
+	<p class="font-mono text-xs text-fg-subtle">{stateLabel}</p>
+</div>

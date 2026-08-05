@@ -6,6 +6,7 @@ import ColorGroup, {
 import TypeSample, {
 	type Props as TypeSampleDef,
 } from "../components/styleguide/TypeSample.astro";
+import StateDemo from "../components/styleguide/StateDemo.astro";
 import ColorSwatch from "../components/styleguide/ColorSwatch.astro";
 
 const surfaceTokens: SwatchDef[] = [
@@ -215,6 +216,25 @@ const fgProseSamples: SwatchDef[] = [
 		sampleText: "Questo testo usa text-fg-subtle per dettagli poco rilevanti.",
 	},
 ];
+
+const stateDemos = [
+	{
+		label: "Primary",
+		className: "bg-primary text-primary-fg hover:bg-primary-hover",
+		stateLabel: ":hover — passa il mouse sopra per vedere bg-primary-hover",
+	},
+	{
+		label: "Accent",
+		className: "bg-accent text-accent-fg hover:bg-accent-hover",
+		stateLabel: ":hover — passa il mouse sopra per vedere bg-accent-hover",
+	},
+	{
+		label: "Disabilitato",
+		className: "bg-primary text-primary-fg",
+		stateLabel: ":disabled — opacità ridotta, cursore non consentito",
+		disabled: true,
+	},
+];
 ---
 
 <SiteLayout
@@ -254,6 +274,17 @@ const fgProseSamples: SwatchDef[] = [
 				class="grid grid-cols-1 gap-4 rounded-lg bg-surface p-4 sm:grid-cols-3"
 			>
 				{fgProseSamples.map((item) => <ColorSwatch {...item} />)}
+			</div>
+		</section>
+
+		<section class="flex flex-col gap-6">
+			<h2>Stati interattivi</h2>
+			<p class="font-mono text-xs text-fg-subtle">
+				Premi Tab per spostare il focus sui pulsanti e vedere l'anello di focus
+				(--color-ring).
+			</p>
+			<div class="grid grid-cols-1 gap-6 sm:grid-cols-3">
+				{stateDemos.map((item) => <StateDemo {...item} />)}
 			</div>
 		</section>
 	</div>
