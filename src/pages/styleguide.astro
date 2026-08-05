@@ -1,5 +1,42 @@
 ---
 import SiteLayout from "../layouts/SiteLayout.astro";
+import ColorSwatch from "../components/styleguide/ColorSwatch.astro";
+
+const surfaceTokens = [
+	{ label: "canvas", className: "bg-canvas", variable: "--color-canvas" },
+	{ label: "surface", className: "bg-surface", variable: "--color-surface" },
+	{
+		label: "surface-muted",
+		className: "bg-surface-muted",
+		variable: "--color-surface-muted",
+	},
+	{
+		label: "surface-sunken",
+		className: "bg-surface-sunken",
+		variable: "--color-surface-sunken",
+	},
+];
 ---
 
-<SiteLayout title="Styleguide">Ciao</SiteLayout>
+<SiteLayout
+	title="Styleguide"
+	description="Vetrina dei design token del progetto."
+>
+	<div class="flex flex-col gap-16">
+		<header class="flex flex-col gap-2">
+			<h1>Styleguide</h1>
+			<p class="text-fg-muted">
+				Vetrina dei design token definiti in <code class="font-mono text-sm"
+					>global.css</code
+				>.
+			</p>
+		</header>
+
+		<section class="flex flex-col gap-8">
+			<h2>Colori</h2>
+			<div class="grid grid-cols-2 gap-4 sm:grid-cols-4">
+				{surfaceTokens.map((item) => <ColorSwatch {...item} />)}
+			</div>
+		</section>
+	</div>
+</SiteLayout>

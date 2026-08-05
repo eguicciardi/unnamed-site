@@ -1,0 +1,93 @@
+---
+interface Props {
+	label: string;
+	className: string;
+	variable: string;
+	variant?: "fill" | "text" | "border";
+	pairedClassName?: string;
+	sampleText?: string;
+	note?: string;
+}
+
+const {
+	label,
+	className,
+	variable,
+	variant = "fill",
+	pairedClassName,
+	sampleText = "Testo di esempio",
+	note,
+} = Astro.props;
+---
+
+<div class="flex flex-col gap-1" data-swatch-card>
+	{
+		variant === "fill" && (
+			<div
+				class:list={["h-16 w-full rounded-md border border-border", className]}
+				data-swatch="fill"
+			/>
+		)
+	}
+	{
+		variant === "border" && (
+			<div
+				class:list={[
+					"flex h-16 w-full items-center justify-center rounded-md border-4 bg-surface",
+					className,
+				]}
+				data-swatch="border"
+			/>
+		)
+	}
+	{
+		variant === "text" && (
+			<div
+				class:list={[
+					"flex h-16 w-full items-center justify-center rounded-md border border-border px-3",
+					pairedClassName,
+				]}
+			>
+				<span
+					class:list={["text-sm font-medium", className]}
+					data-swatch="text"
+				>
+					{sampleText}
+				</span>
+			</div>
+		)
+	}
+	<div class="text-xs leading-tight">
+		<p class="font-mono text-fg">{label}</p>
+		<p class="font-mono text-fg-subtle">{className}</p>
+		<p class="font-mono text-fg-subtle">{variable}</p>
+		<p class="font-mono text-fg-subtle" data-hex-output>risoluzione…</p>
+		{note && <p class="text-fg-subtle italic">{note}</p>}
+	</div>
+</div>
+
+<script>
+	function toHex(rawColor) {
+		const match = rawColor.match(/\d+(\.\d+)?/g);
+		if (!match) return rawColor;
+		const [r, g, b] = match.map((n) => Math.round(Number(n)));
+		return "#" + [r, g, b].map((n) => n.toString(16).padStart(2, "0")).join("");
+	}
+
+	document.querySelectorAll("[data-swatch-card]").forEach((card) => {
+		const box = card.querySelector("[data-swatch]");
+		const output = card.querySelector("[data-hex-output]");
+		if (!(box instanceof HTMLElement) || !(output instanceof HTMLElement))
+			return;
+
+		const mode = box.getAttribute("data-swatch");
+		const raw =
+			mode === "text"
+				? getComputedStyle(box).color
+				: mode === "border"
+					? getComputedStyle(box).borderColor
+					: getComputedStyle(box).backgroundColor;
+
+		output.textContent = toHex(raw);
+	});
+</script>
