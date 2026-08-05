@@ -3,6 +3,10 @@ import SiteLayout from "../layouts/SiteLayout.astro";
 import ColorGroup, {
 	type SwatchDef,
 } from "../components/styleguide/ColorGroup.astro";
+import TypeSample, {
+	type Props as TypeSampleDef,
+} from "../components/styleguide/TypeSample.astro";
+import ColorSwatch from "../components/styleguide/ColorSwatch.astro";
 
 const surfaceTokens: SwatchDef[] = [
 	{ label: "canvas", className: "bg-canvas", variable: "--color-canvas" },
@@ -170,6 +174,47 @@ const successTokens: SwatchDef[] = [
 		pairedClassName: "bg-success",
 	},
 ];
+
+const typeSamples: TypeSampleDef[] = [
+	{ as: "h1", sample: "Titolo di primo livello" },
+	{ as: "h2", sample: "Titolo di secondo livello" },
+	{ as: "h3", sample: "Titolo di terzo livello" },
+	{ as: "h4", sample: "Titolo di quarto livello" },
+	{ as: "h5", sample: "Titolo di quinto livello" },
+	{ as: "h6", sample: "Titolo di sesto livello" },
+	{
+		as: "p",
+		sample:
+			"Paragrafo di testo corrente, usato per i contenuti principali della pagina.",
+	},
+];
+
+const fgProseSamples: SwatchDef[] = [
+	{
+		label: "fg",
+		className: "text-fg",
+		variable: "--color-fg",
+		variant: "text",
+		pairedClassName: "bg-surface",
+		sampleText: "Questo testo usa text-fg per il contenuto principale.",
+	},
+	{
+		label: "fg-muted",
+		className: "text-fg-muted",
+		variable: "--color-fg-muted",
+		variant: "text",
+		pairedClassName: "bg-surface",
+		sampleText: "Questo testo usa text-fg-muted per contenuti secondari.",
+	},
+	{
+		label: "fg-subtle",
+		className: "text-fg-subtle",
+		variable: "--color-fg-subtle",
+		variant: "text",
+		pairedClassName: "bg-surface",
+		sampleText: "Questo testo usa text-fg-subtle per dettagli poco rilevanti.",
+	},
+];
 ---
 
 <SiteLayout
@@ -198,6 +243,18 @@ const successTokens: SwatchDef[] = [
 			<ColorGroup title="Danger" swatches={dangerTokens} />
 			<ColorGroup title="Warning" swatches={warningTokens} />
 			<ColorGroup title="Success" swatches={successTokens} />
+		</section>
+
+		<section class="flex flex-col gap-6">
+			<h2>Tipografia</h2>
+			<div class="flex flex-col">
+				{typeSamples.map((item) => <TypeSample {...item} />)}
+			</div>
+			<div
+				class="grid grid-cols-1 gap-4 rounded-lg bg-surface p-4 sm:grid-cols-3"
+			>
+				{fgProseSamples.map((item) => <ColorSwatch {...item} />)}
+			</div>
 		</section>
 	</div>
 </SiteLayout>

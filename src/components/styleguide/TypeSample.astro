@@ -1,0 +1,13 @@
+---
+export interface Props {
+	as: "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "p";
+	sample: string;
+}
+
+const { as: Tag, sample } = Astro.props;
+---
+
+<div class="flex flex-wrap items-baseline gap-4 border-b border-border py-3">
+	<Tag>{sample}</Tag>
+	<span class="font-mono text-xs text-fg-subtle">&lt;{Tag}&gt;</span>
+</div>
