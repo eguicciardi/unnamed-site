@@ -181,7 +181,8 @@
    duplicating every declaration below, since CSS cannot union a selector
    across a media-query boundary.
    ========================================================================= */
-:root.dark {
+:root.dark,
+:root .theme-dark {
   color-scheme: dark;
 
   --color-canvas: var(--ink-950);
@@ -221,7 +222,8 @@
   --color-success-fg: var(--success-950);
 }
 
-:root.light {
+:root.light,
+:root .theme-light {
   color-scheme: light;
 }
 
@@ -234,6 +236,30 @@
 @layer base {
   html {
     -webkit-text-size-adjust: 100%;
+  }
+
+  h1 {
+    @apply text-4xl font-bold;
+  }
+
+  h2 {
+    @apply text-3xl font-bold;
+  }
+
+  h3 {
+    @apply text-2xl font-semibold;
+  }
+
+  h4 {
+    @apply text-xl font-semibold;
+  }
+
+  h5 {
+    @apply text-lg font-semibold;
+  }
+
+  h6 {
+    @apply text-base font-semibold;
   }
 
   body {
