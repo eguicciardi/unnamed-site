@@ -33,6 +33,143 @@ const borderTokens: SwatchDef[] = [
 		variant: "border",
 	},
 ];
+
+const foregroundTokens: SwatchDef[] = [
+	{
+		label: "fg",
+		className: "text-fg",
+		variable: "--color-fg",
+		variant: "text",
+		pairedClassName: "bg-surface",
+	},
+	{
+		label: "fg-muted",
+		className: "text-fg-muted",
+		variable: "--color-fg-muted",
+		variant: "text",
+		pairedClassName: "bg-surface",
+	},
+	{
+		label: "fg-subtle",
+		className: "text-fg-subtle",
+		variable: "--color-fg-subtle",
+		variant: "text",
+		pairedClassName: "bg-surface",
+	},
+];
+
+const primaryTokens: SwatchDef[] = [
+	{ label: "primary", className: "bg-primary", variable: "--color-primary" },
+	{
+		label: "primary-hover",
+		className: "bg-primary-hover",
+		variable: "--color-primary-hover",
+	},
+	{
+		label: "primary-fg",
+		className: "text-primary-fg",
+		variable: "--color-primary-fg",
+		variant: "text",
+		pairedClassName: "bg-primary",
+	},
+	{
+		label: "primary-subtle",
+		className: "bg-primary-subtle",
+		variable: "--color-primary-subtle",
+	},
+	{
+		label: "primary-subtle-fg",
+		className: "text-primary-subtle-fg",
+		variable: "--color-primary-subtle-fg",
+		variant: "text",
+		pairedClassName: "bg-primary-subtle",
+	},
+];
+
+const accentTokens: SwatchDef[] = [
+	{ label: "accent", className: "bg-accent", variable: "--color-accent" },
+	{
+		label: "accent-hover",
+		className: "bg-accent-hover",
+		variable: "--color-accent-hover",
+	},
+	{
+		label: "accent-fg",
+		className: "text-accent-fg",
+		variable: "--color-accent-fg",
+		variant: "text",
+		pairedClassName: "bg-accent",
+	},
+	{
+		label: "accent-subtle",
+		className: "bg-accent-subtle",
+		variable: "--color-accent-subtle",
+	},
+	{
+		label: "accent-subtle-fg",
+		className: "text-accent-subtle-fg",
+		variable: "--color-accent-subtle-fg",
+		variant: "text",
+		pairedClassName: "bg-accent-subtle",
+	},
+];
+
+const accentAltTokens: SwatchDef[] = [
+	{
+		label: "accent-alt",
+		className: "bg-accent-alt",
+		variable: "--color-accent-alt",
+	},
+	{
+		label: "accent-alt-fg",
+		className: "text-accent-alt-fg",
+		variable: "--color-accent-alt-fg",
+		variant: "text",
+		pairedClassName: "bg-accent-alt",
+	},
+];
+
+const ringTokens: SwatchDef[] = [
+	{
+		label: "ring",
+		className: "bg-ring",
+		variable: "--color-ring",
+		note: "Uso reale: outline-color nella regola globale :focus-visible, non applicato come classe di sfondo.",
+	},
+];
+
+const dangerTokens: SwatchDef[] = [
+	{ label: "danger", className: "bg-danger", variable: "--color-danger" },
+	{
+		label: "danger-fg",
+		className: "text-danger-fg",
+		variable: "--color-danger-fg",
+		variant: "text",
+		pairedClassName: "bg-danger",
+	},
+];
+
+const warningTokens: SwatchDef[] = [
+	{ label: "warning", className: "bg-warning", variable: "--color-warning" },
+	{
+		label: "warning-fg",
+		className: "text-warning-fg",
+		variable: "--color-warning-fg",
+		variant: "text",
+		pairedClassName: "bg-warning",
+	},
+];
+
+const successTokens: SwatchDef[] = [
+	{ label: "success", className: "bg-success", variable: "--color-success" },
+	{
+		label: "success-fg",
+		className: "text-success-fg",
+		variable: "--color-success-fg",
+		variant: "text",
+		pairedClassName: "bg-success",
+	},
+];
 ---
 
 <SiteLayout
@@ -53,6 +190,14 @@ const borderTokens: SwatchDef[] = [
 			<h2>Colori</h2>
 			<ColorGroup title="Surfaces" swatches={surfaceTokens} />
 			<ColorGroup title="Border" swatches={borderTokens} />
+			<ColorGroup title="Foreground" swatches={foregroundTokens} />
+			<ColorGroup title="Primary" swatches={primaryTokens} />
+			<ColorGroup title="Accent" swatches={accentTokens} />
+			<ColorGroup title="Accent-alt" swatches={accentAltTokens} />
+			<ColorGroup title="Ring" swatches={ringTokens} />
+			<ColorGroup title="Danger" swatches={dangerTokens} />
+			<ColorGroup title="Warning" swatches={warningTokens} />
+			<ColorGroup title="Success" swatches={successTokens} />
 		</section>
 	</div>
 </SiteLayout>
