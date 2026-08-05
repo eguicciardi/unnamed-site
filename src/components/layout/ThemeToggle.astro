@@ -1,0 +1,55 @@
+---
+// The initial theme class is stamped on <html> by the inline script in
+// Head.astro; this component only flips it and persists the choice.
+// Both icons ship in the markup and one is hidden via the `dark:` variant, so
+// the button renders correctly on first paint without waiting for JavaScript.
+---
+
+<button
+	type="button"
+	id="theme-toggle"
+	aria-label="Cambia tema"
+	class="rounded-md border border-border p-2 text-fg-muted transition-colors hover:border-border-strong hover:text-fg"
+>
+	{/* sun: shown in dark mode, i.e. "switch to light" */}
+	<svg
+		class="hidden size-5 dark:block"
+		viewBox="0 0 24 24"
+		fill="none"
+		stroke="currentColor"
+		stroke-width="2"
+		stroke-linecap="round"
+		aria-hidden="true"
+	>
+		<circle cx="12" cy="12" r="4"></circle>
+		<path
+			d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"
+		></path>
+	</svg>
+
+	{/* moon: shown in light mode, i.e. "switch to dark" */}
+	<svg
+		class="size-5 dark:hidden"
+		viewBox="0 0 24 24"
+		fill="none"
+		stroke="currentColor"
+		stroke-width="2"
+		stroke-linecap="round"
+		aria-hidden="true"
+	>
+		<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path>
+	</svg>
+</button>
+
+<script>
+	const button = document.getElementById("theme-toggle");
+
+	button?.addEventListener("click", () => {
+		const root = document.documentElement;
+		const next = root.classList.contains("dark") ? "light" : "dark";
+
+		root.classList.remove("light", "dark");
+		root.classList.add(next);
+		localStorage.setItem("theme", next);
+	});
+</script>

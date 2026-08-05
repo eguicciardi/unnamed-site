@@ -1,1 +1,258 @@
 @import "tailwindcss";
+
+/* Enables the `dark:` variant for the rare one-off (shadows, image treatments).
+   Day-to-day styling should use the semantic tokens below, which flip on their own. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ============================================================================
+   1. Private ramps
+   ----------------------------------------------------------------------------
+   Deliberately declared outside `@theme`, so Tailwind generates no utilities
+   for them. They exist only to feed the semantic tokens in section 2.
+   Their hex comments are informative: oklch is the source of truth.
+   ========================================================================= */
+:root {
+  /* ---- brand ---- */
+  --brand-50: oklch(97.7% 0.008 223.3); /* #F2F9FB */
+  --brand-100: oklch(95.1% 0.016 223.4); /* #E4F1F7 */
+  --brand-200: oklch(90% 0.035 220.4); /* #C6E4EE */
+  --brand-300: oklch(82.6% 0.067 220.1); /* #95D1E4 */
+  --brand-400: oklch(74.3% 0.087 221.3); /* #68B8D3 */
+  --brand-500: oklch(68.1% 0.087 223.6); /* #56A4C0 */
+  --brand-600: oklch(58.2% 0.087 226); /* #3885A2 */
+  --brand-700: oklch(49.3% 0.081 226.4); /* #216A85 */
+  --brand-800: oklch(43.5% 0.067 225.4); /* #20596D */
+  --brand-900: oklch(38.2% 0.054 225.4); /* #1E4959 */
+  --brand-950: oklch(29.3% 0.04 226.6); /* #14303B */
+
+  /* ---- accent ---- */
+  --accent-50: oklch(98.7% 0.011 75.9); /* #FFFAF3 */
+  --accent-100: oklch(96.1% 0.032 76.1); /* #FFF0DB */
+  --accent-200: oklch(92.1% 0.067 76.2); /* #FFE0B4 */
+  --accent-300: oklch(87.4% 0.099 74.1); /* #FDCC8B */
+  --accent-400: oklch(82.1% 0.11 70.5); /* #F2B872 */
+  --accent-500: oklch(76.3% 0.11 63.3); /* #E3A265 */
+  --accent-600: oklch(66.1% 0.104 57.4); /* #C3814F */
+  --accent-700: oklch(55.2% 0.095 52.8); /* #9D613A */
+  --accent-800: oklch(47.1% 0.08 51.4); /* #7E4D2F */
+  --accent-900: oklch(41.2% 0.065 51.2); /* #674029 */
+  --accent-950: oklch(27.9% 0.045 51.1); /* #3A2213 */
+
+  /* ---- teal: the second accent, formerly the stray `accent-alt` hex ---- */
+  --teal-400: oklch(74.3% 0.061 213.9); /* #7FB6C3 */
+  --teal-600: oklch(48.2% 0.061 213.9); /* #306773 */
+
+  /* ---- ink ---- */
+  --ink-50: oklch(98.5% 0.004 133.6); /* #F9FBF8 */
+  --ink-100: oklch(97% 0.004 133.6); /* #F4F5F3 */
+  --ink-200: oklch(92.2% 0.011 104.7); /* #E6E6DE */
+  --ink-300: oklch(86.7% 0.018 108.6); /* #D4D4C7 */
+  --ink-400: oklch(70.4% 0.025 108.5); /* #A1A190 */
+  --ink-500: oklch(54.5% 0.025 109.4); /* #717261 */
+  --ink-600: oklch(43.4% 0.025 117.2); /* #505344 */
+  --ink-700: oklch(36.3% 0.025 114.2); /* #3D4031 */
+  --ink-800: oklch(25.5% 0.025 97.5); /* #262315 */
+  --ink-900: oklch(20.9% 0.021 108.4); /* #19190D */
+  --ink-950: oklch(14.7% 0.014 105); /* #0B0B05 */
+  /* --ink-975 is new: dark mode needs a step below the canvas for `sunken` */
+  --ink-975: oklch(9% 0.012 105); /* #030301 */
+
+  /* ---- sand: the one warm value in an otherwise cool system ---- */
+  --sand-100: oklch(93.6% 0.016 64.7); /* #F2E8DF */
+
+  /* ---- danger ---- */
+  --danger-50: oklch(96.9% 0.009 20.2); /* #FBF2F2 */
+  --danger-100: oklch(93.8% 0.019 20.2); /* #F7E6E5 */
+  --danger-200: oklch(88.3% 0.036 19); /* #EFD0CF */
+  --danger-300: oklch(79.2% 0.072 19.8); /* #E6A9A8 */
+  --danger-400: oklch(68.2% 0.12 20.7); /* #D97979 */
+  --danger-500: oklch(62% 0.152 22.2); /* #D25A5B */
+  --danger-600: oklch(56.5% 0.156 22.7); /* #C14749 */
+  --danger-700: oklch(49.8% 0.137 22.4); /* #A23B3D */
+  --danger-800: oklch(44.3% 0.116 20.8); /* #883337 */
+  --danger-900: oklch(40.1% 0.098 19.1); /* #742E32 */
+  --danger-950: oklch(27.1% 0.065 20); /* #411719 */
+
+  /* ---- warning ---- */
+  --warning-50: oklch(98.7% 0.013 83); /* #FFFAF1 */
+  --warning-100: oklch(96.2% 0.038 83.1); /* #FFF1D6 */
+  --warning-200: oklch(92.4% 0.077 83.2); /* #FFE2AB */
+  --warning-300: oklch(87.9% 0.118 81.1); /* #FFCF78 */
+  --warning-400: oklch(82.8% 0.132 77.5); /* #F6BB5A */
+  --warning-500: oklch(76.9% 0.131 70.4); /* #E9A44C */
+  --warning-600: oklch(66.6% 0.125 64.5); /* #C88235 */
+  --warning-700: oklch(55.5% 0.114 59.8); /* #A36122 */
+  --warning-800: oklch(47.3% 0.096 58.4); /* #834C1C */
+  --warning-900: oklch(41.4% 0.078 58.3); /* #6B401B */
+  --warning-950: oklch(27.9% 0.054 58.1); /* #3C210A */
+
+  /* ---- success ---- */
+  --success-50: oklch(97.9% 0.013 159.9); /* #F1FBF5 */
+  --success-100: oklch(95% 0.032 158.3); /* #DDF6E6 */
+  --success-200: oklch(90.5% 0.058 158.9); /* #C0ECD2 */
+  --success-300: oklch(84.5% 0.089 159.3); /* #99DEB8 */
+  --success-400: oklch(76.5% 0.11 158.4); /* #71C898 */
+  --success-500: oklch(69.6% 0.105 158); /* #5FB184 */
+  --success-600: oklch(59.6% 0.09 158.4); /* #4C8F6B */
+  --success-700: oklch(50.8% 0.073 159.6); /* #3D7257 */
+  --success-800: oklch(43.2% 0.059 160.3); /* #315A45 */
+  --success-900: oklch(37.8% 0.048 161.3); /* #294A3A */
+  --success-950: oklch(26.2% 0.032 163.1); /* #152920 */
+}
+
+/* ============================================================================
+   2. Semantic tokens (light) - the only colours Tailwind exposes
+   ----------------------------------------------------------------------------
+   `--color-*: initial` wipes Tailwind's default palette, so `bg-red-500` and
+   `bg-gray-900` stop resolving. That is the point: every remaining colour
+   utility is a token that flips in dark mode. Comment that line out to get
+   the stock palette back.
+
+   Plain `@theme` (not `@theme inline`) is required here: utilities must compile
+   to `var(--color-primary)` for section 3 to be able to override them.
+
+   Surfaces form a ladder: sunken < canvas < surface < surface-muted.
+   Foregrounds are verified at >= 4.5:1 (WCAG AA) against every surface in both
+   themes; the tightest pair is 6.01:1.
+   ========================================================================= */
+@theme {
+  --color-*: initial;
+
+  --color-transparent: transparent;
+  --color-current: currentColor;
+  --color-white: #ffffff;
+  --color-black: #000000;
+
+  /* ---- surfaces ---- */
+  --color-canvas: var(--sand-100);
+  --color-surface: var(--color-white);
+  --color-surface-muted: var(--ink-100);
+  --color-surface-sunken: var(--ink-200);
+
+  /* ---- borders: `border` is a divider, `border-strong` an interactive
+         outline (>= 3:1, usable on inputs) ---- */
+  --color-border: var(--ink-300);
+  --color-border-strong: var(--ink-500);
+
+  /* ---- foregrounds ---- */
+  --color-fg: var(--ink-900);
+  --color-fg-muted: var(--ink-700);
+  --color-fg-subtle: var(--ink-600);
+
+  /* ---- primary ---- */
+  --color-primary: var(--brand-900);
+  --color-primary-hover: var(--brand-950);
+  --color-primary-fg: var(--ink-50);
+  --color-primary-subtle: var(--brand-100);
+  --color-primary-subtle-fg: var(--brand-950);
+
+  /* ---- accent ---- */
+  --color-accent: var(--accent-400);
+  --color-accent-hover: var(--accent-500);
+  --color-accent-fg: var(--accent-950);
+  --color-accent-subtle: var(--accent-100);
+  --color-accent-subtle-fg: var(--accent-800);
+
+  /* ---- accent-alt ---- */
+  --color-accent-alt: var(--teal-600);
+  --color-accent-alt-fg: var(--ink-50);
+
+  /* ---- focus ---- */
+  --color-ring: var(--brand-900);
+
+  /* ---- status ---- */
+  --color-danger: var(--danger-600);
+  --color-danger-fg: var(--ink-50);
+  --color-warning: var(--warning-600);
+  --color-warning-fg: var(--warning-950);
+  --color-success: var(--success-700);
+  --color-success-fg: var(--ink-50);
+}
+
+/* ============================================================================
+   3. Semantic tokens (dark)
+   ----------------------------------------------------------------------------
+   `:root.dark` (0,2,0) deliberately outranks the `:root` that `@theme` emits
+   (0,1,0), so the override can never lose to import order.
+
+   The class is stamped on <html> by the inline script in Head.astro before
+   first paint. Without JavaScript the light theme is served even to users whose
+   OS prefers dark: adding a `prefers-color-scheme` fallback would mean
+   duplicating every declaration below, since CSS cannot union a selector
+   across a media-query boundary.
+   ========================================================================= */
+:root.dark {
+  color-scheme: dark;
+
+  --color-canvas: var(--ink-950);
+  --color-surface: var(--ink-900);
+  --color-surface-muted: var(--ink-800);
+  --color-surface-sunken: var(--ink-975);
+
+  --color-border: var(--ink-700);
+  --color-border-strong: var(--ink-500);
+
+  --color-fg: var(--ink-100);
+  --color-fg-muted: var(--ink-300);
+  --color-fg-subtle: var(--ink-400);
+
+  --color-primary: var(--brand-400);
+  --color-primary-hover: var(--brand-300);
+  --color-primary-fg: var(--brand-950);
+  --color-primary-subtle: var(--brand-900);
+  --color-primary-subtle-fg: var(--brand-200);
+
+  --color-accent: var(--accent-400);
+  --color-accent-hover: var(--accent-300);
+  --color-accent-fg: var(--accent-950);
+  --color-accent-subtle: var(--accent-900);
+  --color-accent-subtle-fg: var(--accent-200);
+
+  --color-accent-alt: var(--teal-400);
+  --color-accent-alt-fg: var(--ink-950);
+
+  --color-ring: var(--brand-400);
+
+  --color-danger: var(--danger-400);
+  --color-danger-fg: var(--danger-950);
+  --color-warning: var(--warning-400);
+  --color-warning-fg: var(--warning-950);
+  --color-success: var(--success-400);
+  --color-success-fg: var(--success-950);
+}
+
+:root.light {
+  color-scheme: light;
+}
+
+/* ============================================================================
+   4. Base layer
+   ----------------------------------------------------------------------------
+   Without this the tokens exist but nothing consumes them, and every page has
+   to remember `bg-canvas text-fg`.
+   ========================================================================= */
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-canvas);
+    color: var(--color-fg);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection {
+    background-color: var(--color-primary-subtle);
+    color: var(--color-primary-subtle-fg);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-ring);
+    outline-offset: 2px;
+  }
+
+  hr {
+    border-color: var(--color-border);
+  }
+}

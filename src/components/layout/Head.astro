@@ -1,0 +1,40 @@
+---
+interface Props {
+	title: string;
+	description?: string;
+}
+
+const { title, description } = Astro.props;
+---
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="generator" content={Astro.generator} />
+
+<title>{title}</title>
+{description && <meta name="description" content={description} />}
+
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="icon" href="/favicon.ico" />
+
+{
+	/*
+	Stamps `light` or `dark` on <html> before first paint, so there is no flash
+	of the wrong theme. `is:inline` keeps Astro from hoisting it into a deferred
+	bundle, which would defeat the purpose.
+	Kept in sync with the `theme` key in localStorage; falls back to the OS
+	preference when the user has never chosen.
+*/
+}
+<script is:inline>
+	const stored = localStorage.getItem("theme");
+	const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+	const theme =
+		stored === "light" || stored === "dark"
+			? stored
+			: prefersDark
+				? "dark"
+				: "light";
+
+	document.documentElement.classList.add(theme);
+</script>

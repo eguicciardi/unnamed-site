@@ -1,0 +1,24 @@
+{
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+
+  "[astro]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+  "[css]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+  "[javascript]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+  "[typescript]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+  "[json]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+  "[jsonc]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+  "[markdown]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+
+  // Use the repo's own prettier + prettier-plugin-astro rather than the
+  // version bundled in the extension, so editor and CLI can't disagree.
+  "prettier.prettierPath": "./node_modules/prettier",
+
+  // The built-in CSS language server doesn't know Tailwind v4's at-rules and
+  // flags `@theme` / `@custom-variant` in global.css as unknown.
+  "css.lint.unknownAtRules": "ignore",
+
+  // Tailwind IntelliSense needs to be told that .astro files contain classes.
+  // Harmless if the extension isn't installed.
+  "tailwindCSS.includeLanguages": { "astro": "html" }
+}
