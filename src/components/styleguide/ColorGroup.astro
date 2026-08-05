@@ -1,0 +1,44 @@
+---
+import ColorSwatch from "./ColorSwatch.astro";
+
+interface SwatchDef {
+	label: string;
+	className: string;
+	variable: string;
+	variant?: "fill" | "text" | "border";
+	pairedClassName?: string;
+	sampleText?: string;
+	note?: string;
+}
+
+interface Props {
+	title: string;
+	swatches: SwatchDef[];
+}
+
+const { title, swatches } = Astro.props;
+---
+
+<section class="flex flex-col gap-3">
+	<h3 class="text-sm font-semibold uppercase tracking-wide text-fg-muted">
+		{title}
+	</h3>
+	<div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+		<div class="theme-light flex flex-col gap-4 rounded-lg bg-surface p-4">
+			<p class="text-xs font-semibold uppercase tracking-wide text-fg-subtle">
+				Light
+			</p>
+			<div class="grid grid-cols-2 gap-4 sm:grid-cols-3">
+				{swatches.map((swatch) => <ColorSwatch {...swatch} />)}
+			</div>
+		</div>
+		<div class="theme-dark flex flex-col gap-4 rounded-lg bg-surface p-4">
+			<p class="text-xs font-semibold uppercase tracking-wide text-fg-subtle">
+				Dark
+			</p>
+			<div class="grid grid-cols-2 gap-4 sm:grid-cols-3">
+				{swatches.map((swatch) => <ColorSwatch {...swatch} />)}
+			</div>
+		</div>
+	</div>
+</section>

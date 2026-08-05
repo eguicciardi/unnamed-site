@@ -1,6 +1,6 @@
 ---
 import SiteLayout from "../layouts/SiteLayout.astro";
-import ColorSwatch from "../components/styleguide/ColorSwatch.astro";
+import ColorGroup from "../components/styleguide/ColorGroup.astro";
 
 const surfaceTokens = [
 	{ label: "canvas", className: "bg-canvas", variable: "--color-canvas" },
@@ -14,6 +14,21 @@ const surfaceTokens = [
 		label: "surface-sunken",
 		className: "bg-surface-sunken",
 		variable: "--color-surface-sunken",
+	},
+];
+
+const borderTokens = [
+	{
+		label: "border",
+		className: "border-border",
+		variable: "--color-border",
+		variant: "border",
+	},
+	{
+		label: "border-strong",
+		className: "border-border-strong",
+		variable: "--color-border-strong",
+		variant: "border",
 	},
 ];
 ---
@@ -34,9 +49,8 @@ const surfaceTokens = [
 
 		<section class="flex flex-col gap-8">
 			<h2>Colori</h2>
-			<div class="grid grid-cols-2 gap-4 sm:grid-cols-4">
-				{surfaceTokens.map((item) => <ColorSwatch {...item} />)}
-			</div>
+			<ColorGroup title="Surfaces" swatches={surfaceTokens} />
+			<ColorGroup title="Border" swatches={borderTokens} />
 		</section>
 	</div>
 </SiteLayout>
