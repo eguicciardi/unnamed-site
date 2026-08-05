@@ -10,7 +10,8 @@
 
 ## Global Constraints
 
-- All new UI copy is in Italian, matching the rest of the site and this plan's source spec.
+- All new UI copy is in Italian, matching the rest of the site and this plan's source spec — **except** structural/technical labels that name a code concept rather than address the reader: theme-column labels ("Light"/"Dark") and colour-group titles ("Surfaces", "Border", "Primary", etc.) stay in English, matching the English token names they label (`bg-primary`, `--color-border`). Confirmed with the human partner after Task 3's review raised it.
+- Every array of `SwatchDef`-shaped objects (anything passed as `ColorGroup`'s `swatches` prop, or spread directly into `<ColorSwatch {...item} />`) must be annotated `: SwatchDef[]` at its declaration, with `SwatchDef` imported as a type from `ColorGroup.astro` (which exports it). Without this annotation, TypeScript widens a literal like `variant: "border"` to plain `string`, which no longer satisfies `SwatchDef.variant`'s literal union — confirmed as a real type error during Task 3's review, before it could multiply across Task 4's larger arrays.
 - `.astro` files use tab indentation, other files 2 spaces — enforced by `.prettierrc.json`; run `npx prettier --write <files>` at the end of every task rather than hand-formatting.
 - No new colour tokens. Every class/variable referenced must already exist in `src/styles/global.css` (verified in a prior session, contrast-checked, do not re-derive).
 - No spacing or radius tokens — out of scope per the spec, use Tailwind's default scale for layout (gap, padding, rounded-md, etc.).
@@ -327,9 +328,9 @@ git commit -m "feat: add ColorSwatch component and wire up Surfaces tokens"
 
 **Interfaces:**
 - Consumes: `ColorSwatch.astro` (Task 2), `.theme-light` / `.theme-dark` selectors (Task 1).
-- Produces: `ColorGroup.astro`, props:
+- Produces: `ColorGroup.astro`, props. `SwatchDef` is exported (not just `Props`) because Task 4 and Task 5 need to import it as a type to annotate their token arrays — without that annotation, TypeScript widens literal `variant` values to plain `string` and they stop satisfying this union:
   ```ts
-  interface SwatchDef {
+  export interface SwatchDef {
   	label: string;
   	className: string;
   	variable: string;
@@ -352,7 +353,7 @@ git commit -m "feat: add ColorSwatch component and wire up Surfaces tokens"
 ---
 import ColorSwatch from "./ColorSwatch.astro";
 
-interface SwatchDef {
+export interface SwatchDef {
 	label: string;
 	className: string;
 	variable: string;
@@ -398,16 +399,16 @@ Replace the entire contents of `src/pages/styleguide.astro`:
 ```astro
 ---
 import SiteLayout from "../layouts/SiteLayout.astro";
-import ColorGroup from "../components/styleguide/ColorGroup.astro";
+import ColorGroup, { type SwatchDef } from "../components/styleguide/ColorGroup.astro";
 
-const surfaceTokens = [
+const surfaceTokens: SwatchDef[] = [
 	{ label: "canvas", className: "bg-canvas", variable: "--color-canvas" },
 	{ label: "surface", className: "bg-surface", variable: "--color-surface" },
 	{ label: "surface-muted", className: "bg-surface-muted", variable: "--color-surface-muted" },
 	{ label: "surface-sunken", className: "bg-surface-sunken", variable: "--color-surface-sunken" },
 ];
 
-const borderTokens = [
+const borderTokens: SwatchDef[] = [
 	{ label: "border", className: "border-border", variable: "--color-border", variant: "border" },
 	{
 		label: "border-strong",
@@ -463,26 +464,26 @@ git commit -m "feat: add ColorGroup component with light/dark comparison"
 - Modify: `src/pages/styleguide.astro` (full rewrite)
 
 **Interfaces:**
-- Consumes: `ColorGroup` (Task 3), `ColorSwatch`'s `text` variant (Task 2, not yet exercised).
+- Consumes: `ColorGroup` (Task 3) and its exported `SwatchDef` type (Task 3's fix round added `export` to that interface — confirm it's there before starting; if not, add `export` yourself), `ColorSwatch`'s `text` variant (Task 2, not yet exercised).
 - Produces: nothing consumed by later tasks — these data arrays are page-local.
 
-This task adds the remaining 8 groups from the spec's token table (Foreground, Primary, Accent, Accent-alt, Ring, Danger, Warning, Success), completing the Colori section 1:1 against `global.css`.
+This task adds the remaining 8 groups from the spec's token table (Foreground, Primary, Accent, Accent-alt, Ring, Danger, Warning, Success), completing the Colori section 1:1 against `global.css`. Every token array below is explicitly typed `: SwatchDef[]` — this is required, not stylistic: without it, TypeScript widens literal `variant` values like `"text"` to plain `string`, which fails to satisfy `SwatchDef.variant`'s literal union (confirmed as a real type error during Task 3's review).
 
 - [ ] **Step 1: Replace `styleguide.astro` with the full Colori section**
 
 ```astro
 ---
 import SiteLayout from "../layouts/SiteLayout.astro";
-import ColorGroup from "../components/styleguide/ColorGroup.astro";
+import ColorGroup, { type SwatchDef } from "../components/styleguide/ColorGroup.astro";
 
-const surfaceTokens = [
+const surfaceTokens: SwatchDef[] = [
 	{ label: "canvas", className: "bg-canvas", variable: "--color-canvas" },
 	{ label: "surface", className: "bg-surface", variable: "--color-surface" },
 	{ label: "surface-muted", className: "bg-surface-muted", variable: "--color-surface-muted" },
 	{ label: "surface-sunken", className: "bg-surface-sunken", variable: "--color-surface-sunken" },
 ];
 
-const borderTokens = [
+const borderTokens: SwatchDef[] = [
 	{ label: "border", className: "border-border", variable: "--color-border", variant: "border" },
 	{
 		label: "border-strong",
@@ -492,7 +493,7 @@ const borderTokens = [
 	},
 ];
 
-const foregroundTokens = [
+const foregroundTokens: SwatchDef[] = [
 	{ label: "fg", className: "text-fg", variable: "--color-fg", variant: "text", pairedClassName: "bg-surface" },
 	{
 		label: "fg-muted",
@@ -510,7 +511,7 @@ const foregroundTokens = [
 	},
 ];
 
-const primaryTokens = [
+const primaryTokens: SwatchDef[] = [
 	{ label: "primary", className: "bg-primary", variable: "--color-primary" },
 	{ label: "primary-hover", className: "bg-primary-hover", variable: "--color-primary-hover" },
 	{
@@ -530,7 +531,7 @@ const primaryTokens = [
 	},
 ];
 
-const accentTokens = [
+const accentTokens: SwatchDef[] = [
 	{ label: "accent", className: "bg-accent", variable: "--color-accent" },
 	{ label: "accent-hover", className: "bg-accent-hover", variable: "--color-accent-hover" },
 	{
@@ -550,7 +551,7 @@ const accentTokens = [
 	},
 ];
 
-const accentAltTokens = [
+const accentAltTokens: SwatchDef[] = [
 	{ label: "accent-alt", className: "bg-accent-alt", variable: "--color-accent-alt" },
 	{
 		label: "accent-alt-fg",
@@ -561,7 +562,7 @@ const accentAltTokens = [
 	},
 ];
 
-const ringTokens = [
+const ringTokens: SwatchDef[] = [
 	{
 		label: "ring",
 		className: "bg-ring",
@@ -570,7 +571,7 @@ const ringTokens = [
 	},
 ];
 
-const dangerTokens = [
+const dangerTokens: SwatchDef[] = [
 	{ label: "danger", className: "bg-danger", variable: "--color-danger" },
 	{
 		label: "danger-fg",
@@ -581,7 +582,7 @@ const dangerTokens = [
 	},
 ];
 
-const warningTokens = [
+const warningTokens: SwatchDef[] = [
 	{ label: "warning", className: "bg-warning", variable: "--color-warning" },
 	{
 		label: "warning-fg",
@@ -592,7 +593,7 @@ const warningTokens = [
 	},
 ];
 
-const successTokens = [
+const successTokens: SwatchDef[] = [
 	{ label: "success", className: "bg-success", variable: "--color-success" },
 	{
 		label: "success-fg",
@@ -658,21 +659,21 @@ git commit -m "feat: complete colour token showcase (10 semantic groups)"
 - Modify: `src/pages/styleguide.astro` (add section, imports, arrays only — do not touch the Colori section written in Task 4)
 
 **Interfaces:**
-- Consumes: base heading styles from Task 1; `ColorSwatch`'s `text` variant (Task 2), reused here for the fg-on-surface prose samples instead of duplicating that rendering logic.
-- Produces: `TypeSample.astro`, props:
+- Consumes: base heading styles from Task 1; `ColorSwatch`'s `text` variant (Task 2) and its exported `SwatchDef` type (Task 3/4), reused here for the fg-on-surface prose samples instead of duplicating that rendering logic.
+- Produces: `TypeSample.astro`, props (exported as `Props`, Astro's convention for component prop typing — do not rename this interface):
   ```ts
-  interface Props {
+  export interface Props {
   	as: "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "p";
   	sample: string;
   }
   ```
-  Renders `sample` inside a dynamically-chosen tag (`as`), labelled with the tag name used.
+  Renders `sample` inside a dynamically-chosen tag (`as`), labelled with the tag name used. The `typeSamples` array in `styleguide.astro` must be typed `: TypeSampleDef[]` (imported as `type Props as TypeSampleDef`) and `fgProseSamples` typed `: SwatchDef[]` — same literal-widening reason as Task 4's arrays.
 
 - [ ] **Step 1: Create `TypeSample.astro`**
 
 ```astro
 ---
-interface Props {
+export interface Props {
 	as: "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "p";
 	sample: string;
 }
@@ -691,14 +692,14 @@ const { as: Tag, sample } = Astro.props;
 In `src/pages/styleguide.astro`, add two imports after the existing `ColorGroup` import:
 
 ```astro
-import TypeSample from "../components/styleguide/TypeSample.astro";
+import TypeSample, { type Props as TypeSampleDef } from "../components/styleguide/TypeSample.astro";
 import ColorSwatch from "../components/styleguide/ColorSwatch.astro";
 ```
 
-Add two new arrays after the `successTokens` array (before the closing `---`):
+Add two new arrays after the `successTokens` array (before the closing `---`). Both are explicitly typed for the same reason `SwatchDef[]` was required in Task 4 — without the annotation, TypeScript widens `as: "h1"` and `variant: "text"` to plain `string`, which fails the components' literal union types:
 
 ```js
-const typeSamples = [
+const typeSamples: TypeSampleDef[] = [
 	{ as: "h1", sample: "Titolo di primo livello" },
 	{ as: "h2", sample: "Titolo di secondo livello" },
 	{ as: "h3", sample: "Titolo di terzo livello" },
@@ -708,7 +709,7 @@ const typeSamples = [
 	{ as: "p", sample: "Paragrafo di testo corrente, usato per i contenuti principali della pagina." },
 ];
 
-const fgProseSamples = [
+const fgProseSamples: SwatchDef[] = [
 	{
 		label: "fg",
 		className: "text-fg",
