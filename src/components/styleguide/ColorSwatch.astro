@@ -82,8 +82,8 @@ const {
 			/oklch\(\s*([\d.]+)%?\s+([\d.]+)\s+([\d.]+)/i,
 		);
 		if (oklchMatch) {
-			let [L, C, H] = oklchMatch.slice(1, 4).map(Number);
-			if (rawColor.includes("%")) L /= 100;
+			const [rawL, C, H] = oklchMatch.slice(1, 4).map(Number);
+			const L = rawColor.includes("%") ? rawL / 100 : rawL;
 			const hRad = (H * Math.PI) / 180;
 			const a = C * Math.cos(hRad);
 			const b = C * Math.sin(hRad);

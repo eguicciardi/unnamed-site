@@ -225,6 +225,42 @@
 :root.light,
 :root .theme-light {
   color-scheme: light;
+
+  --color-canvas: var(--sand-100);
+  --color-surface: var(--color-white);
+  --color-surface-muted: var(--ink-100);
+  --color-surface-sunken: var(--ink-200);
+
+  --color-border: var(--ink-300);
+  --color-border-strong: var(--ink-500);
+
+  --color-fg: var(--ink-900);
+  --color-fg-muted: var(--ink-700);
+  --color-fg-subtle: var(--ink-600);
+
+  --color-primary: var(--brand-900);
+  --color-primary-hover: var(--brand-950);
+  --color-primary-fg: var(--ink-50);
+  --color-primary-subtle: var(--brand-100);
+  --color-primary-subtle-fg: var(--brand-950);
+
+  --color-accent: var(--accent-400);
+  --color-accent-hover: var(--accent-500);
+  --color-accent-fg: var(--accent-950);
+  --color-accent-subtle: var(--accent-100);
+  --color-accent-subtle-fg: var(--accent-800);
+
+  --color-accent-alt: var(--teal-600);
+  --color-accent-alt-fg: var(--ink-50);
+
+  --color-ring: var(--brand-900);
+
+  --color-danger: var(--danger-600);
+  --color-danger-fg: var(--ink-50);
+  --color-warning: var(--warning-600);
+  --color-warning-fg: var(--warning-950);
+  --color-success: var(--success-700);
+  --color-success-fg: var(--ink-50);
 }
 
 /* ============================================================================
