@@ -123,6 +123,10 @@
   --color-white: #ffffff;
   --color-black: #000000;
 
+  /* ---- typography: mono for body copy, sans for headings ---- */
+  --font-mono: var(--font-space-mono), monospace;
+  --font-sans: var(--font-space-grotesk), sans-serif;
+
   /* ---- surfaces ---- */
   --color-canvas: var(--sand-100);
   --color-surface: var(--color-white);
@@ -275,32 +279,33 @@
   }
 
   h1 {
-    @apply text-4xl font-bold;
+    @apply font-sans text-4xl font-bold;
   }
 
   h2 {
-    @apply text-3xl font-bold;
+    @apply font-sans text-3xl font-bold;
   }
 
   h3 {
-    @apply text-2xl font-semibold;
+    @apply font-sans text-2xl font-semibold;
   }
 
   h4 {
-    @apply text-xl font-semibold;
+    @apply font-sans text-xl font-semibold;
   }
 
   h5 {
-    @apply text-lg font-semibold;
+    @apply font-sans text-lg font-semibold;
   }
 
   h6 {
-    @apply text-base font-semibold;
+    @apply font-sans text-base font-semibold;
   }
 
   body {
     background-color: var(--color-canvas);
     color: var(--color-fg);
+    font-family: var(--font-mono);
     -webkit-font-smoothing: antialiased;
   }
 
