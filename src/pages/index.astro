@@ -1,8 +1,271 @@
 ---
-import SiteLayout from "../layouts/SiteLayout.astro";
+import Base from "../layouts/Base.astro";
+import ContactPills from "../components/ContactPills.astro";
+import WritingRow from "../components/WritingRow.astro";
+import LinkRow from "../components/LinkRow.astro";
+import { site } from "../data/site";
+import {
+	formatDotted,
+	getLinks,
+	getWriting,
+	readingMinutes,
+} from "../lib/content";
+
+const writing = (await getWriting()).slice(0, 3);
+const links = (await getLinks()).slice(0, 4);
 ---
 
-<SiteLayout title="Astro">
-	<h1>Astro</h1>
-	<h2>Astro2</h2>
-</SiteLayout>
+<Base
+	title={site.name}
+	description={site.description}
+	ambient={{ seed: 7, count: 18 }}
+>
+	<section class="hero">
+		<p class="hello">Hello! I'm</p>
+		<h1 class="name">
+			<span class="first">emanuele</span>
+			<span class="last">Guicciardi</span>
+		</h1>
+		<p class="bio">{site.bio}</p>
+		<div class="contact">
+			<span class="contact-label">Contact info</span>
+			<ContactPills />
+		</div>
+	</section>
+
+	<div class="hairline gap-top"></div>
+
+	<section class="columns">
+		<div>
+			<h2 class="section-title heading">Currently</h2>
+			<p class="meta period">{site.current.period}</p>
+			<p class="role">{site.current.role}</p>
+			<p class="employer">
+				<a
+					class="underline-hi"
+					href={site.current.employerUrl}
+					target="_blank"
+					rel="noopener">{site.current.employer}</a
+				>{" "}
+				— {site.current.location}<br />{site.current.summary}
+			</p>
+			<p class="aside">…and writing small notes on the web.</p>
+		</div>
+
+		<div>
+			<h2 class="section-title heading">Expertise</h2>
+			<ul class="skills">
+				{
+					site.skills.map((skill) => (
+						<li>
+							<span class="star" aria-hidden="true">
+								✦
+							</span>
+							{skill}
+						</li>
+					))
+				}
+			</ul>
+		</div>
+	</section>
+
+	<div class="hairline"></div>
+
+	<section id="writing" class="list-section writing">
+		<div class="section-head">
+			<h2 class="section-title">Writing</h2>
+			<p class="aside">notes from my own work</p>
+		</div>
+		<div class="rows">
+			{
+				writing.map((entry, i) => (
+					<WritingRow
+						title={entry.data.title}
+						href={`/posts/${entry.id}`}
+						date={formatDotted(entry.data.date)}
+						mins={readingMinutes(entry.body)}
+						index={i}
+					/>
+				))
+			}
+		</div>
+	</section>
+
+	<div class="hairline gap-mid"></div>
+
+	<section class="list-section reading">
+		<div class="section-head">
+			<h2 class="section-title">Reading list</h2>
+			<p class="aside">elsewhere on the web — a linkblog</p>
+		</div>
+		<div class="rows tight">
+			{
+				links.map((link, i) => (
+					<LinkRow
+						title={link.data.title}
+						url={link.data.url}
+						author={link.data.author}
+						index={i}
+					/>
+				))
+			}
+		</div>
+		<a class="all underline-hi" href="/posts">All posts →</a>
+	</section>
+</Base>
+
+<style>
+	.hero {
+		max-width: 64ch;
+		padding-top: clamp(36px, 7vw, 80px);
+	}
+
+	.hero > * {
+		animation: cvUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+	}
+
+	.hello {
+		margin-bottom: 2px;
+		font-weight: 700;
+		font-size: clamp(22px, 3.2vw, 30px);
+		animation-duration: 0.7s;
+		animation-delay: 0.05s;
+	}
+
+	.name {
+		margin-bottom: 10px;
+		line-height: 1.02;
+		letter-spacing: -0.03em;
+		font-weight: 700;
+		animation-delay: 0.12s;
+	}
+	.name span {
+		display: block;
+	}
+	.first {
+		font-size: clamp(40px, 7.5vw, 74px);
+	}
+	.last {
+		font-style: italic;
+		font-size: clamp(38px, 6.8vw, 68px);
+		color: var(--pop);
+	}
+
+	.bio {
+		max-width: 56ch;
+		margin-top: 22px;
+		margin-bottom: 30px;
+		font-family: var(--font-mono);
+		font-size: 14.5px;
+		line-height: 2;
+		color: var(--body);
+		animation-delay: 0.2s;
+	}
+
+	.contact {
+		animation: cvUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.28s both;
+	}
+
+	.contact-label {
+		display: inline-block;
+		margin-bottom: 18px;
+		padding: 4px 12px;
+		background: var(--hi);
+		color: var(--on-hi);
+		font-weight: 700;
+		font-size: 13.5px;
+		letter-spacing: 0.16em;
+		text-transform: uppercase;
+	}
+
+	.gap-top {
+		margin-top: clamp(44px, 7vw, 80px);
+	}
+	.gap-mid {
+		margin-top: clamp(36px, 6vw, 56px);
+	}
+
+	.columns {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+		gap: clamp(32px, 5vw, 64px);
+		padding-block: clamp(36px, 6vw, 64px);
+	}
+
+	.heading {
+		margin-bottom: 24px;
+	}
+
+	.period {
+		margin-bottom: 6px;
+		font-size: 12.5px;
+		letter-spacing: 0.05em;
+	}
+
+	.role {
+		margin-bottom: 4px;
+		font-weight: 600;
+		font-size: 18px;
+	}
+
+	.employer {
+		margin-bottom: 26px;
+		font-family: var(--font-mono);
+		font-size: 13.5px;
+		line-height: 1.9;
+		color: var(--body);
+	}
+
+	.skills {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(min(100%, 160px), 1fr));
+		gap: 12px 24px;
+		font-family: var(--font-mono);
+		font-size: 13.5px;
+		color: var(--body);
+	}
+	.skills li {
+		display: flex;
+		align-items: baseline;
+		gap: 10px;
+	}
+	.star {
+		font-size: 11px;
+		color: var(--hi-ink);
+	}
+
+	.list-section {
+		max-width: 860px;
+		padding-top: clamp(36px, 6vw, 64px);
+		scroll-margin-top: 80px;
+	}
+	.reading {
+		padding-bottom: clamp(20px, 4vw, 40px);
+	}
+
+	.section-head {
+		margin-bottom: 28px;
+	}
+
+	.rows {
+		display: flex;
+		flex-direction: column;
+		gap: 2px;
+	}
+	.rows.tight {
+		gap: 4px;
+	}
+
+	.all {
+		display: inline-block;
+		margin-top: 26px;
+		font-weight: 600;
+		font-size: 15px;
+		text-decoration-thickness: 3px;
+		text-underline-offset: 4px;
+		transition: color 0.2s ease;
+	}
+	.all:hover {
+		color: var(--pop);
+	}
+</style>

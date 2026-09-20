@@ -1,0 +1,308 @@
+---
+import { render } from "astro:content";
+import Base from "../../layouts/Base.astro";
+import Breadcrumb from "../../components/Breadcrumb.astro";
+import { formatLong, getWriting, readingMinutes } from "../../lib/content";
+
+export async function getStaticPaths() {
+	const writing = await getWriting();
+
+	return writing.map((entry, i) => ({
+		params: { slug: entry.id },
+		// The list is newest first, so the next index is the older post.
+		props: { entry, previous: writing[i + 1] },
+	}));
+}
+
+const { entry, previous } = Astro.props;
+const { Content } = await render(entry);
+const { title, date, category, excerpt, tags } = entry.data;
+
+// The last two words of the title are set in italic accent, as in the design.
+const words = title.split(" ");
+const lead = words.slice(0, -2).join(" ");
+const tail = words.slice(-2).join(" ");
+---
+
+<Base
+	title={`${title} · Emanuele Guicciardi`}
+	description={excerpt}
+	ambient={{ seed: 41, count: 14, maxSize: 26 }}
+>
+	<div class="column">
+		<div class="crumbs">
+			<Breadcrumb
+				crumbs={[
+					{ label: "Home", href: "/" },
+					{ label: "Writing", href: "/posts#writing" },
+					{ label: title },
+				]}
+			/>
+		</div>
+
+		<article>
+			<header class="head">
+				<div class="meta-row">
+					<span class="category">{category}</span>
+					<time datetime={date.toISOString().slice(0, 10)}
+						>{formatLong(date)}</time
+					>
+					<span aria-hidden="true" class="dot">·</span>
+					<span>{readingMinutes(entry.body)} min read</span>
+				</div>
+				<h1>{lead} <em>{tail}</em></h1>
+				<p class="standfirst">{excerpt}</p>
+			</header>
+
+			<div class="prose">
+				<Content />
+			</div>
+
+			<div class="hairline end"></div>
+
+			{
+				tags.length > 0 && (
+					<div class="tags">
+						<span class="tag-label">Tagged</span>
+						<ul>
+							{tags.map((tag) => (
+								<li>{tag}</li>
+							))}
+						</ul>
+					</div>
+				)
+			}
+		</article>
+
+		<nav aria-label="More writing" class="more">
+			{
+				previous && (
+					<a href={`/posts/${previous.id}`}>
+						<span class="kicker">← Previous</span>
+						<span class="target">{previous.data.title}</span>
+					</a>
+				)
+			}
+			<a href="/posts#writing" class="index">
+				<span class="kicker">Index →</span>
+				<span class="target">All writing</span>
+			</a>
+		</nav>
+	</div>
+</Base>
+
+<style>
+	.column {
+		max-width: 720px;
+		padding-top: clamp(24px, 4vw, 40px);
+	}
+
+	.crumbs {
+		margin-bottom: clamp(28px, 5vw, 44px);
+	}
+
+	.head {
+		margin-bottom: clamp(32px, 5vw, 48px);
+		animation: cvUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.08s both;
+	}
+
+	.meta-row {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 12px;
+		margin-bottom: 16px;
+		font-family: var(--font-mono);
+		font-size: 12px;
+		letter-spacing: 0.05em;
+		color: var(--soft);
+	}
+	.category {
+		padding: 3px 10px;
+		border-radius: 3px;
+		background: var(--hi);
+		color: var(--on-hi);
+		font-weight: 500;
+	}
+	.dot {
+		opacity: 0.5;
+	}
+
+	h1 {
+		margin-bottom: 18px;
+		font-weight: 700;
+		font-size: clamp(32px, 5.4vw, 52px);
+		line-height: 1.08;
+		letter-spacing: -0.03em;
+		text-wrap: pretty;
+	}
+	h1 em {
+		color: var(--pop);
+	}
+
+	.standfirst {
+		max-width: 56ch;
+		font-size: clamp(17px, 2vw, 20px);
+		line-height: 1.6;
+		color: var(--body);
+		text-wrap: pretty;
+	}
+
+	/* Body prose. The markdown output is not scoped, hence :global. */
+	.prose {
+		animation: cvUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.16s both;
+	}
+	.prose :global(p) {
+		margin-bottom: 26px;
+		font-family: var(--font-mono);
+		font-size: 14.5px;
+		line-height: 2.05;
+		color: var(--body);
+		text-wrap: pretty;
+	}
+	.prose :global(h2) {
+		margin: 44px 0 18px;
+		font-weight: 700;
+		font-size: clamp(22px, 3vw, 27px);
+		line-height: 1.25;
+		letter-spacing: -0.015em;
+		color: var(--ink);
+		text-wrap: pretty;
+	}
+	.prose :global(a) {
+		color: var(--ink);
+		text-decoration: underline;
+		text-decoration-color: var(--hi);
+		text-decoration-thickness: 2px;
+		text-underline-offset: 3px;
+	}
+	.prose :global(pre) {
+		margin-bottom: 26px;
+		padding: 18px 20px;
+		overflow-x: auto;
+		background: var(--code-bg);
+		border: 1px solid var(--hairline);
+		border-left: 3px solid var(--pop);
+		border-radius: 4px;
+	}
+	.prose :global(code) {
+		font-family: var(--font-mono);
+		font-size: 12.5px;
+		line-height: 1.9;
+		color: var(--body);
+		white-space: pre;
+	}
+	.prose :global(p code) {
+		padding: 1px 5px;
+		border-radius: 3px;
+		background: var(--code-bg);
+		white-space: normal;
+	}
+	.prose :global(blockquote) {
+		margin-bottom: 26px;
+		padding: 4px 0 4px 22px;
+		border-left: 3px solid var(--hi);
+		font-style: italic;
+		font-size: 19px;
+		line-height: 1.55;
+		color: var(--ink);
+		text-wrap: pretty;
+	}
+	/* Markdown wraps blockquote text in a <p>; undo the body styling there. */
+	.prose :global(blockquote p) {
+		margin: 0;
+		font-family: inherit;
+		font-size: inherit;
+		line-height: inherit;
+		color: inherit;
+	}
+	.prose :global(ul) {
+		display: flex;
+		flex-direction: column;
+		gap: 14px;
+		margin-bottom: 26px;
+	}
+	.prose :global(li) {
+		padding: 2px 0 2px 22px;
+		border-left: 2px solid var(--hairline);
+		font-family: var(--font-mono);
+		font-size: 14px;
+		line-height: 1.95;
+		color: var(--body);
+	}
+	.prose :global(li strong) {
+		font-weight: 500;
+		color: var(--ink);
+	}
+
+	.end {
+		margin: clamp(40px, 6vw, 56px) 0 28px;
+	}
+
+	.tags {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 14px;
+		margin-bottom: 8px;
+	}
+	.tag-label {
+		font-family: var(--font-mono);
+		font-size: 11.5px;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+		color: var(--soft);
+	}
+	.tags ul {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px;
+	}
+	.tags li {
+		padding: 4px 11px;
+		border: 1px solid var(--hairline);
+		border-radius: 999px;
+		font-family: var(--font-mono);
+		font-size: 12px;
+		letter-spacing: 0.03em;
+		color: var(--body);
+	}
+
+	.more {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+		gap: 14px;
+		margin-top: clamp(36px, 5vw, 52px);
+	}
+	.more a {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+		padding: 18px 20px;
+		border: 1px solid var(--hairline);
+		border-radius: 6px;
+		transition:
+			background 0.22s ease,
+			border-color 0.22s ease;
+	}
+	.more a:hover {
+		background: var(--row-hover);
+		border-color: var(--pop);
+	}
+	.kicker {
+		font-family: var(--font-mono);
+		font-size: 11px;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+		color: var(--soft);
+	}
+	.target {
+		font-weight: 600;
+		font-size: 17px;
+		line-height: 1.35;
+		color: var(--ink);
+	}
+	.index {
+		text-align: right;
+	}
+</style>

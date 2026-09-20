@@ -1,9 +1,69 @@
 ---
-
+import { site } from "../../data/site";
+import AccentPicker from "./AccentPicker.astro";
+import MotionToggle from "./MotionToggle.astro";
 ---
 
-<footer class="mt-auto border-t border-border bg-surface">
-	<div class="mx-auto max-w-5xl px-6 py-8 text-sm text-fg-muted">
-		<slot />
+<footer class="frame footer">
+	<div class="hairline rule"></div>
+
+	<div class="controls">
+		<AccentPicker />
+		<MotionToggle />
+	</div>
+
+	<div class="bottom">
+		<a class="top" href="#top" aria-label="Back to top">↑</a>
+		<p class="copy">© 2026 {site.name}</p>
 	</div>
 </footer>
+
+<style>
+	.footer {
+		position: relative;
+		z-index: 1;
+		padding-top: clamp(28px, 4vw, 44px);
+		padding-bottom: clamp(40px, 6vw, 72px);
+	}
+
+	.rule {
+		margin-bottom: 26px;
+	}
+
+	.controls {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: clamp(24px, 5vw, 48px);
+		margin-bottom: 30px;
+	}
+
+	.bottom {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: flex-end;
+		justify-content: space-between;
+		gap: 24px;
+	}
+
+	.top {
+		display: inline-block;
+		font-size: 36px;
+		line-height: 1;
+		color: var(--ink);
+		transition:
+			transform 0.25s ease,
+			color 0.25s ease;
+	}
+	.top:hover {
+		color: var(--pop);
+		transform: translateY(-4px);
+	}
+
+	.copy {
+		font-family: var(--font-mono);
+		font-size: 12px;
+		letter-spacing: 0.04em;
+		color: var(--soft);
+	}
+</style>

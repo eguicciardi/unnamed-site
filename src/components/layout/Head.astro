@@ -1,5 +1,6 @@
 ---
 import { Font } from "astro:assets";
+import { ACCENTS, site } from "../../data/site";
 
 interface Props {
 	title: string;
@@ -16,30 +17,46 @@ const { title, description } = Astro.props;
 <title>{title}</title>
 {description && <meta name="description" content={description} />}
 
-<Font cssVariable="--font-space-mono" preload />
-<Font cssVariable="--font-space-grotesk" preload />
+<Font cssVariable="--font-familjen-grotesk" preload />
+<Font cssVariable="--font-ibm-plex-mono" preload />
 
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 <link rel="icon" href="/favicon.ico" />
+<link
+	rel="alternate"
+	type="application/rss+xml"
+	title={`${site.name}: writing`}
+	href={site.rss}
+/>
+
+<!-- Umami analytics. `is:inline` keeps Astro from bundling or rewriting the tag. -->
+<script
+	is:inline
+	defer
+	src="https://stats.guicciardi.net/script.js"
+	data-website-id="1170eb65-a7d0-4a38-bb8e-174146f8b1d6"></script>
 
 {
 	/*
-	Stamps `light` or `dark` on <html> before first paint, so there is no flash
-	of the wrong theme. `is:inline` keeps Astro from hoisting it into a deferred
-	bundle, which would defeat the purpose.
-	Kept in sync with the `theme` key in localStorage; falls back to the OS
-	preference when the user has never chosen.
+	Applies the reader's saved preferences to <html> before first paint, so the
+	page never flashes light and then snaps to dark. `define:vars` makes the
+	script inline (it must not be deferred) and hands it the accent whitelist,
+	so a stale or tampered localStorage value falls back to the default instead
+	of leaving <html> without a palette.
 */
 }
-<script is:inline>
-	const stored = localStorage.getItem("theme");
-	const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-	const theme =
-		stored === "light" || stored === "dark"
-			? stored
-			: prefersDark
-				? "dark"
-				: "light";
+<script is:inline define:vars={{ accents: [...ACCENTS] }}>
+	const root = document.documentElement;
+	const read = (key, allowed) => {
+		try {
+			const value = localStorage.getItem(key);
+			return allowed.includes(value) ? value : allowed[0];
+		} catch {
+			return allowed[0];
+		}
+	};
 
-	document.documentElement.classList.add(theme);
+	root.dataset.theme = read("gnet-theme", ["light", "dark"]);
+	root.dataset.accent = read("gnet-accent", accents);
+	root.dataset.motion = read("gnet-motion", ["on", "off"]);
 </script>

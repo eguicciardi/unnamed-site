@@ -1,0 +1,153 @@
+---
+const sun = {
+	circle: { cx: 12, cy: 12, r: 4.2 },
+	rays: "M12 2.4v2.2M12 19.4v2.2M2.4 12h2.2M19.4 12h2.2M5.2 5.2l1.6 1.6M17.2 17.2l1.6 1.6M18.8 5.2l-1.6 1.6M6.8 17.2l-1.6 1.6",
+};
+const moon = "M20.5 14.6A8.6 8.6 0 0 1 9.4 3.5a8.6 8.6 0 1 0 11.1 11.1z";
+---
+
+<button
+	type="button"
+	class="switch"
+	data-theme-switch
+	aria-label="Toggle dark mode"
+	title="Light / dark"
+>
+	<span class="dim left">
+		<svg
+			width="13"
+			height="13"
+			viewBox="0 0 24 24"
+			fill="none"
+			stroke="currentColor"
+			stroke-width="2.2"
+			stroke-linecap="round"
+			aria-hidden="true"
+		>
+			<circle {...sun.circle}></circle><path d={sun.rays}></path>
+		</svg>
+	</span>
+	<span class="dim right">
+		<svg
+			width="13"
+			height="13"
+			viewBox="0 0 24 24"
+			fill="none"
+			stroke="currentColor"
+			stroke-width="2.2"
+			stroke-linecap="round"
+			stroke-linejoin="round"
+			aria-hidden="true"
+		>
+			<path d={moon}></path>
+		</svg>
+	</span>
+	<span class="knob">
+		<svg
+			class="in-light"
+			width="13"
+			height="13"
+			viewBox="0 0 24 24"
+			fill="none"
+			stroke="currentColor"
+			stroke-width="2.4"
+			stroke-linecap="round"
+			aria-hidden="true"
+		>
+			<circle {...sun.circle}></circle><path d={sun.rays}></path>
+		</svg>
+		<svg
+			class="in-dark"
+			width="13"
+			height="13"
+			viewBox="0 0 24 24"
+			fill="none"
+			stroke="currentColor"
+			stroke-width="2.4"
+			stroke-linecap="round"
+			stroke-linejoin="round"
+			aria-hidden="true"
+		>
+			<path d={moon}></path>
+		</svg>
+	</span>
+</button>
+
+<script>
+	import { setPreference } from "../../scripts/preferences";
+
+	document
+		.querySelector("[data-theme-switch]")
+		?.addEventListener("click", () => {
+			const dark = document.documentElement.dataset.theme === "dark";
+			setPreference("theme", dark ? "light" : "dark");
+		});
+</script>
+
+<style>
+	.switch {
+		position: relative;
+		display: block;
+		flex: none;
+		width: 62px;
+		height: 30px;
+		padding: 0;
+		border: 1px solid var(--hairline);
+		border-radius: 15px;
+		background: var(--track);
+		cursor: pointer;
+		transition:
+			background 0.35s ease,
+			border-color 0.35s ease;
+	}
+
+	.dim {
+		position: absolute;
+		top: 0;
+		width: 31px;
+		height: 28px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		color: var(--soft);
+	}
+	.left {
+		left: 0;
+	}
+	.right {
+		right: 0;
+	}
+
+	.knob {
+		position: absolute;
+		top: 2px;
+		left: 2px;
+		width: 24px;
+		height: 24px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border-radius: 50%;
+		background: var(--pop);
+		color: var(--on-pop);
+		box-shadow: 0 2px 6px var(--shadow);
+		transition:
+			left 0.36s cubic-bezier(0.6, -0.25, 0.3, 1.35),
+			background 0.35s ease;
+	}
+
+	:global(:root[data-theme="dark"]) .knob {
+		left: 34px;
+	}
+
+	/* The knob carries the icon of the current mode. */
+	.in-dark {
+		display: none;
+	}
+	:global(:root[data-theme="dark"]) .in-light {
+		display: none;
+	}
+	:global(:root[data-theme="dark"]) .in-dark {
+		display: block;
+	}
+</style>

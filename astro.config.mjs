@@ -5,24 +5,29 @@ import tailwindcss from "@tailwindcss/vite";
 
 // https://astro.build/config
 export default defineConfig({
+  // Needed for absolute URLs in the RSS feed.
+  site: "https://guicciardi.net",
+  // The design styles <pre> itself; Shiki would inject inline colours over it.
+  markdown: { syntaxHighlight: false },
   vite: {
     plugins: [tailwindcss()],
   },
   fonts: [
     {
       provider: fontProviders.google(),
-      name: "Space Mono",
-      cssVariable: "--font-space-mono",
-      weights: [400, 700],
+      name: "Familjen Grotesk",
+      cssVariable: "--font-familjen-grotesk",
+      weights: [400, 500, 600, 700],
       styles: ["normal", "italic"],
-      fallbacks: ["monospace"],
+      fallbacks: ["sans-serif"],
     },
     {
       provider: fontProviders.google(),
-      name: "Space Grotesk",
-      cssVariable: "--font-space-grotesk",
-      weights: [400, 500, 700],
-      fallbacks: ["sans-serif"],
+      name: "IBM Plex Mono",
+      cssVariable: "--font-ibm-plex-mono",
+      weights: [400, 500],
+      styles: ["normal"],
+      fallbacks: ["monospace"],
     },
   ],
 });

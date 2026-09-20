@@ -1,0 +1,80 @@
+---
+interface Crumb {
+	label: string;
+	href?: string;
+}
+
+interface Props {
+	crumbs: Crumb[];
+}
+
+const { crumbs } = Astro.props;
+---
+
+<nav aria-label="Breadcrumb" class="crumbs">
+	<ol>
+		{
+			crumbs.map((crumb, i) => (
+				<>
+					{i > 0 && (
+						<li aria-hidden="true" class="sep">
+							/
+						</li>
+					)}
+					<li>
+						{crumb.href ? (
+							<a href={crumb.href}>{crumb.label}</a>
+						) : (
+							<span class="current" aria-current="page">
+								{crumb.label}
+							</span>
+						)}
+					</li>
+				</>
+			))
+		}
+	</ol>
+</nav>
+
+<style>
+	.crumbs {
+		animation: cvUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+	}
+
+	ol {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 8px;
+		font-family: var(--font-mono);
+		font-size: 12px;
+		letter-spacing: 0.04em;
+	}
+
+	a {
+		color: var(--soft);
+		border-bottom: 1px solid transparent;
+		transition:
+			color 0.2s ease,
+			border-color 0.2s ease;
+	}
+	a:hover {
+		color: var(--pop);
+		border-color: var(--pop);
+	}
+
+	.sep {
+		color: var(--soft);
+		opacity: 0.6;
+	}
+
+	/* Long article titles truncate instead of wrapping the trail. */
+	.current {
+		display: block;
+		max-width: 34ch;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		color: var(--body);
+	}
+</style>

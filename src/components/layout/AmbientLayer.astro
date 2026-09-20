@@ -1,0 +1,61 @@
+---
+// Small drifting glyphs behind the page. Positions come from a seeded LCG at
+// build time, so the layer is identical on every render and never jumps.
+interface Props {
+	seed: number;
+	count: number;
+	maxSize?: number;
+}
+
+const { seed: initialSeed, count, maxSize = 30 } = Astro.props;
+
+const glyphs = ["✦", "✧", "+", "·", "✦", "◦", "✧", "×"];
+let seed = initialSeed;
+const rnd = () => (seed = (seed * 9301 + 49297) % 233280) / 233280;
+
+const marks = Array.from({ length: count }, (_, i) => ({
+	glyph: glyphs[i % glyphs.length],
+	top: (4 + rnd() * 90).toFixed(2),
+	left: (3 + rnd() * 93).toFixed(2),
+	size: (10 + rnd() * (maxSize - 10)).toFixed(1),
+	duration: (7 + rnd() * 9).toFixed(2),
+	delay: (rnd() * 14).toFixed(2),
+	warm: rnd() > 0.55,
+}));
+---
+
+<div data-ambient aria-hidden="true" class="ambient">
+	{
+		marks.map((mark) => (
+			<span
+				class:list={["mark", { warm: mark.warm }]}
+				style={`top:${mark.top}%;left:${mark.left}%;font-size:${mark.size}px;animation-duration:${mark.duration}s;animation-delay:${mark.delay}s`}
+			>
+				{mark.glyph}
+			</span>
+		))
+	}
+</div>
+
+<style>
+	.ambient {
+		position: fixed;
+		inset: 0;
+		z-index: 0;
+		pointer-events: none;
+		overflow: hidden;
+	}
+
+	.mark {
+		position: absolute;
+		line-height: 1;
+		color: var(--pop);
+		opacity: 0;
+		will-change: transform, opacity;
+		animation: cvDrift 10s ease-in-out infinite;
+	}
+
+	.warm {
+		color: var(--hi-ink);
+	}
+</style>

@@ -1,0 +1,76 @@
+<div class="motion">
+	<span class="label">Animations</span>
+	<button
+		type="button"
+		class="track"
+		role="switch"
+		aria-checked="true"
+		aria-label="Background animations"
+		data-motion-toggle
+	>
+		<span class="knob"></span>
+	</button>
+</div>
+
+<script>
+	import { setPreference } from "../../scripts/preferences";
+
+	const toggle = document.querySelector<HTMLButtonElement>(
+		"[data-motion-toggle]",
+	);
+	const isOn = () => document.documentElement.dataset.motion !== "off";
+	const sync = () => toggle?.setAttribute("aria-checked", String(isOn()));
+
+	toggle?.addEventListener("click", () => {
+		setPreference("motion", isOn() ? "off" : "on");
+		sync();
+	});
+	sync();
+</script>
+
+<style>
+	.motion {
+		display: flex;
+		align-items: center;
+		gap: 14px;
+	}
+
+	.label {
+		font-family: var(--font-mono);
+		font-size: 11.5px;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+		color: var(--soft);
+	}
+
+	.track {
+		position: relative;
+		display: block;
+		width: 44px;
+		height: 24px;
+		padding: 0;
+		border: 1px solid var(--hairline);
+		border-radius: 12px;
+		background: var(--track);
+		cursor: pointer;
+		transition: background 0.3s ease;
+	}
+
+	.knob {
+		position: absolute;
+		top: 2px;
+		left: 22px;
+		width: 18px;
+		height: 18px;
+		border-radius: 50%;
+		background: var(--pop);
+		transition:
+			left 0.32s cubic-bezier(0.6, -0.25, 0.3, 1.35),
+			background 0.3s ease;
+	}
+
+	:global(:root[data-motion="off"]) .knob {
+		left: 2px;
+		background: var(--knob-off);
+	}
+</style>

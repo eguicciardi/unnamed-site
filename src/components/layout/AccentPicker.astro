@@ -1,0 +1,125 @@
+---
+import { ACCENTS } from "../../data/site";
+---
+
+<div class="picker">
+	<span class="label">Accent</span>
+	<div class="swatches" role="group" aria-label="Accent colour">
+		{
+			ACCENTS.map((name) => (
+				<button
+					type="button"
+					class="swatch"
+					data-accent={name}
+					aria-label={name}
+					title={name}
+					aria-pressed={name === ACCENTS[0]}
+				>
+					<span class="swatch-dot" />
+				</button>
+			))
+		}
+	</div>
+	{
+		/* Only the active name shows; global.css reveals it from <html data-accent>. */
+	}
+	<span class="active" aria-live="polite">
+		{
+			ACCENTS.map((name) => (
+				<span class="accent-name" data-accent={name}>
+					{name}
+				</span>
+			))
+		}
+	</span>
+</div>
+
+<script>
+	import { setPreference } from "../../scripts/preferences";
+
+	const swatches = document.querySelectorAll<HTMLButtonElement>(".swatch");
+
+	const syncPressed = () => {
+		for (const swatch of swatches) {
+			swatch.setAttribute(
+				"aria-pressed",
+				String(
+					swatch.dataset.accent === document.documentElement.dataset.accent,
+				),
+			);
+		}
+	};
+
+	for (const swatch of swatches) {
+		swatch.addEventListener("click", () => {
+			setPreference("accent", swatch.dataset.accent ?? "");
+			syncPressed();
+		});
+	}
+	syncPressed();
+</script>
+
+<style>
+	.picker {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 14px;
+	}
+
+	.label {
+		font-family: var(--font-mono);
+		font-size: 11.5px;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+		color: var(--soft);
+	}
+
+	/* The negative margin cancels the oversized 40px hit area visually. */
+	.swatches {
+		display: flex;
+		align-items: center;
+		gap: 2px;
+		margin: -8px;
+	}
+
+	.swatch {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 40px;
+		height: 40px;
+		padding: 0;
+		border: 0;
+		border-radius: 50%;
+		background: transparent;
+		cursor: pointer;
+		-webkit-tap-highlight-color: transparent;
+	}
+
+	/* --ink and --pop are re-scoped onto each swatch by global.css, so the dot
+	   shows its own palette rather than the active one. */
+	.swatch-dot {
+		display: block;
+		width: 20px;
+		height: 20px;
+		border-radius: 50%;
+		background: linear-gradient(135deg, var(--ink) 0 50%, var(--pop) 50% 100%);
+		box-shadow: 0 0 0 1px var(--hairline);
+		transition:
+			box-shadow 0.22s ease,
+			transform 0.22s ease;
+	}
+
+	.active {
+		min-width: 8ch;
+		font-family: var(--font-mono);
+		font-size: 11.5px;
+		letter-spacing: 0.04em;
+		color: var(--body);
+	}
+
+	.accent-name {
+		display: none;
+	}
+</style>

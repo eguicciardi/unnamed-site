@@ -1,0 +1,94 @@
+---
+import { domainOf } from "../lib/content";
+
+interface Props {
+	title: string;
+	url: string;
+	author: string;
+	/** Only the archive passes this; the home list omits it. */
+	excerpt?: string;
+	index?: number;
+}
+
+const { title, url, author, excerpt, index = 0 } = Astro.props;
+const archive = excerpt !== undefined;
+---
+
+<a
+	href={url}
+	target="_blank"
+	rel="noopener"
+	class:list={["row", { archive }]}
+	style={`--i:${index}`}
+>
+	<div class="head">
+		<h3 class="row-title">
+			<span class="star" aria-hidden="true">✦</span>{title}
+		</h3>
+		<span class="domain">{domainOf(url)} ↗</span>
+	</div>
+	<p class="meta author">posted by {author}</p>
+	{excerpt && <p class="excerpt">{excerpt}</p>}
+</a>
+
+<style>
+	.row {
+		padding-block: 15px;
+	}
+	.row.archive {
+		padding-block: 14px;
+	}
+
+	.head {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: flex-start;
+		justify-content: space-between;
+		gap: 16px;
+		margin-bottom: 6px;
+	}
+	.archive .head {
+		margin-bottom: 5px;
+	}
+
+	.row-title {
+		display: flex;
+		align-items: baseline;
+		gap: 10px;
+		font-size: 20px;
+	}
+	.archive .row-title {
+		font-size: 19px;
+	}
+
+	.star {
+		flex: none;
+		font-size: 12px;
+		color: var(--pop);
+	}
+
+	.domain {
+		flex-shrink: 0;
+		padding: 3px 9px;
+		border-radius: 3px;
+		background: var(--hi);
+		color: var(--on-hi);
+		font-family: var(--font-mono);
+		font-size: 11.5px;
+		letter-spacing: 0.03em;
+		white-space: nowrap;
+	}
+
+	.author {
+		padding-left: 22px;
+		font-size: 12px;
+		letter-spacing: 0.03em;
+	}
+	.archive .author {
+		margin-bottom: 6px;
+	}
+
+	.excerpt {
+		padding-left: 22px;
+	}
+</style>

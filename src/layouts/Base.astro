@@ -1,0 +1,48 @@
+---
+import "../styles/global.css";
+import Head from "../components/layout/Head.astro";
+import Header from "../components/layout/Header.astro";
+import Footer from "../components/layout/Footer.astro";
+import AmbientLayer from "../components/layout/AmbientLayer.astro";
+
+interface Props {
+	title: string;
+	description?: string;
+	/** Seed and size of the ambient layer; each page gets its own fixed layout. */
+	ambient: { seed: number; count: number; maxSize?: number };
+	onPosts?: boolean;
+}
+
+const { title, description, ambient, onPosts } = Astro.props;
+---
+
+<html lang="en" data-theme="light" data-accent="Blue ink" data-motion="on">
+	<head>
+		<Head title={title} description={description} />
+	</head>
+	<body>
+		{
+			/* `clip`, not `hidden`: hidden would make this a scroll container and break the sticky header. */
+		}
+		<div id="top" class="page">
+			<AmbientLayer {...ambient} />
+			<Header {onPosts} />
+			<main class="frame">
+				<slot />
+			</main>
+			<Footer />
+		</div>
+	</body>
+</html>
+
+<style>
+	.page {
+		min-height: 100vh;
+		overflow-x: clip;
+	}
+
+	main {
+		position: relative;
+		z-index: 1;
+	}
+</style>
