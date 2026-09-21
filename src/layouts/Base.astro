@@ -10,10 +10,10 @@ interface Props {
 	description?: string;
 	/** Seed and size of the ambient layer; each page gets its own fixed layout. */
 	ambient: { seed: number; count: number; maxSize?: number };
-	onPosts?: boolean;
+	current?: "about" | "posts";
 }
 
-const { title, description, ambient, onPosts } = Astro.props;
+const { title, description, ambient, current } = Astro.props;
 ---
 
 <html lang="en" data-theme="light" data-accent="Blue ink" data-motion="on">
@@ -25,9 +25,10 @@ const { title, description, ambient, onPosts } = Astro.props;
 			/* `clip`, not `hidden`: hidden would make this a scroll container and break the sticky header. */
 		}
 		<div id="top" class="page">
+			<a class="skip" href="#main">Skip to content</a>
 			<AmbientLayer {...ambient} />
-			<Header {onPosts} />
-			<main class="frame">
+			<Header {current} />
+			<main id="main" class="frame">
 				<slot />
 			</main>
 			<Footer />
@@ -44,5 +45,30 @@ const { title, description, ambient, onPosts } = Astro.props;
 	main {
 		position: relative;
 		z-index: 1;
+	}
+
+	/* The ambient glyphs drift behind the page. Every block of content gets
+	   the paper colour, so a glyph can pass behind text but never under it:
+	   text always sits on a plain background and keeps its contrast. */
+	main > :global(*:not(.hairline)) {
+		background: var(--bg);
+		transition: background 0.4s ease;
+	}
+
+	.skip {
+		position: absolute;
+		z-index: 30;
+		top: 8px;
+		left: 8px;
+		padding: 10px 16px;
+		border-radius: 6px;
+		background: var(--ink);
+		color: var(--bg);
+		font-family: var(--font-mono);
+		font-size: 13px;
+		transform: translateY(-200%);
+	}
+	.skip:focus {
+		transform: none;
 	}
 </style>

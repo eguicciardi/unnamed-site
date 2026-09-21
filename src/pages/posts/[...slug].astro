@@ -78,13 +78,15 @@ const tail = words.slice(-2).join(" ");
 			{
 				previous && (
 					<a href={`/posts/${previous.id}`}>
-						<span class="kicker">← Previous</span>
+						<span class="kicker">
+							<span aria-hidden="true">←</span> Previous
+						</span>
 						<span class="target">{previous.data.title}</span>
 					</a>
 				)
 			}
 			<a href="/posts#writing" class="index">
-				<span class="kicker">Index →</span>
+				<span class="kicker">Index <span aria-hidden="true">→</span></span>
 				<span class="target">All writing</span>
 			</a>
 		</nav>

@@ -22,3 +22,7 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# Design references, not part of the site
+design_handoff_guicciardi_net/
+inspo/

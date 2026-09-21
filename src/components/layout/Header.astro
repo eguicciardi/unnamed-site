@@ -3,28 +3,37 @@ import { site } from "../../data/site";
 import ThemeSwitch from "./ThemeSwitch.astro";
 
 interface Props {
-	/** True on the Posts archive, where the nav item is the current page. */
-	onPosts?: boolean;
+	/** The section the reader is in; its nav item is marked as the current page. */
+	current?: "about" | "posts";
 }
 
-const { onPosts = false } = Astro.props;
+const { current } = Astro.props;
+
+const links = [
+	{ id: "about", label: "About", href: "/about" },
+	{ id: "posts", label: "Posts", href: "/posts" },
+] as const;
 ---
 
 <header class="header">
 	<div class="frame bar">
 		<a class="brand" href="/">{site.domain}</a>
 		<div class="right">
-			{
-				onPosts ? (
-					<span class="nav current" aria-current="page">
-						Posts
-					</span>
-				) : (
-					<a class="nav" href="/posts">
-						Posts
-					</a>
-				)
-			}
+			<nav aria-label="Main">
+				{
+					links.map(({ id, label, href }) =>
+						id === current ? (
+							<span class="nav current" aria-current="page">
+								{label}
+							</span>
+						) : (
+							<a class="nav" {href}>
+								{label}
+							</a>
+						),
+					)
+				}
+			</nav>
 			<ThemeSwitch />
 		</div>
 	</div>
@@ -56,6 +65,12 @@ const { onPosts = false } = Astro.props;
 	}
 
 	.right {
+		display: flex;
+		align-items: center;
+		gap: clamp(14px, 3vw, 26px);
+	}
+
+	nav {
 		display: flex;
 		align-items: center;
 		gap: clamp(14px, 3vw, 26px);

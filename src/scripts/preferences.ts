@@ -7,7 +7,7 @@ const KEYS = {
   motion: "gnet-motion",
 } as const;
 
-export type PreferenceName = keyof typeof KEYS;
+type PreferenceName = keyof typeof KEYS;
 
 export function setPreference(name: PreferenceName, value: string): void {
   document.documentElement.dataset[name] = value;

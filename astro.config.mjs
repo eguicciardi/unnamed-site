@@ -1,7 +1,5 @@
 // @ts-check
-import { defineConfig, fontProviders } from "astro/config";
-
-import tailwindcss from "@tailwindcss/vite";
+import { defineConfig, envField, fontProviders } from "astro/config";
 
 // https://astro.build/config
 export default defineConfig({
@@ -9,8 +7,22 @@ export default defineConfig({
   site: "https://guicciardi.net",
   // The design styles <pre> itself; Shiki would inject inline colours over it.
   markdown: { syntaxHighlight: false },
-  vite: {
-    plugins: [tailwindcss()],
+  // Umami analytics. Both are optional: without them (local development, forks)
+  // no tracking script is rendered.
+  env: {
+    schema: {
+      UMAMI_SCRIPT_URL: envField.string({
+        context: "client",
+        access: "public",
+        optional: true,
+        startsWith: "https://",
+      }),
+      UMAMI_WEBSITE_ID: envField.string({
+        context: "client",
+        access: "public",
+        optional: true,
+      }),
+    },
   },
   fonts: [
     {

@@ -1,18 +1,20 @@
 export const ACCENTS = ["Blue ink", "Terracotta", "Rosa", "Olive"] as const;
-export type Accent = (typeof ACCENTS)[number];
+
+const since = 2021;
 
 export const site = {
   name: "Emanuele Guicciardi",
   domain: "guicciardi.net",
   description:
-    "Personal site of Emanuele Guicciardi, a senior full-stack developer in Pisa, Italy.",
-  bio: "A senior full-stack developer based in Pisa, Italy, with a deep love for well-built backends. I specialize primarily in backend architecture and modern JavaScript, but I also enjoy shaping APIs, DevOps workflows and the small details that make software feel reliable.",
+    "Personal site of Emanuele Guicciardi, a senior backend developer in Pisa, Italy.",
+  bio: "Senior backend developer in Pisa, Italy. I design, maintain and secure the systems behind products, from architecture and APIs to delivery, so they keep working when traffic grows, networks fail and requirements change. I care about the small details that make software feel reliable.",
   email: "emanuele@guicciardi.net",
   github: "https://github.com/eguicciardi",
   linkedin: "https://it.linkedin.com/in/emanueleguicciardi",
   rss: "/rss.xml",
   current: {
-    period: "2021 — present",
+    since,
+    period: `${since} — present`,
     role: "Senior Developer",
     employer: "Lifetronic Srl",
     employerUrl: "https://lifetronic.it",

@@ -1,5 +1,3 @@
-@import "tailwindcss";
-
 /* ============================================================================
    Tokens
    ----------------------------------------------------------------------------
@@ -11,9 +9,17 @@
    to hex shifts the hues. Only `ink`, `body`, `soft`, `pop`, `hi` and `hi-ink`
    change per accent; the surfaces depend on the theme alone.
 
-   Keep `soft` at ~51% L in light mode: it is what lets meta text clear 4.5:1
-   on the paper background.
+   Contrast (WCAG 2.1 AA), measured on paper and on a hovered row: `body` is at
+   least 6:1 and `soft` at least 5.3:1 in every palette and theme. Do not
+   lighten them back. `pop` is for large text and non-text marks (3:1);
+   anything small that turns accent-coloured uses `pop-text`. `control` is the
+   3:1 outline and off-state colour of the switches.
    ========================================================================= */
+
+:root {
+  --font-sans: var(--font-familjen-grotesk), sans-serif;
+  --font-mono: var(--font-ibm-plex-mono), monospace;
+}
 
 :root[data-theme="light"] {
   color-scheme: light;
@@ -26,7 +32,9 @@
   --code-bg: oklch(99% 0.006 90);
   --on-hi: oklch(28% 0.06 70);
   --on-pop: oklch(98% 0.01 90);
-  --knob-off: oklch(78% 0.01 80);
+  --control: oklch(60% 0.02 80);
+  /* The accent darkened until it clears 4.5:1 on paper and on a hovered row. */
+  --pop-text: color-mix(in oklch, var(--pop) 86%, black);
 }
 
 :root[data-theme="dark"] {
@@ -40,14 +48,15 @@
   --code-bg: oklch(25% 0.016 255);
   --on-hi: oklch(22% 0.03 80);
   --on-pop: oklch(20% 0.02 255);
-  --knob-off: oklch(48% 0.01 255);
+  --control: oklch(56% 0.02 255);
+  --pop-text: var(--pop);
 }
 
 :root[data-theme="light"][data-accent="Blue ink"],
 :root[data-theme="light"] .swatch[data-accent="Blue ink"] {
   --ink: oklch(40% 0.11 255);
-  --body: oklch(50% 0.06 255);
-  --soft: oklch(51% 0.05 255);
+  --body: oklch(45.5% 0.06 255);
+  --soft: oklch(48.5% 0.05 255);
   --pop: oklch(55% 0.19 18);
   --hi: oklch(89% 0.14 95);
   --hi-ink: oklch(72% 0.15 85);
@@ -57,7 +66,7 @@
 :root[data-theme="dark"] .swatch[data-accent="Blue ink"] {
   --ink: oklch(93% 0.02 90);
   --body: oklch(80% 0.02 240);
-  --soft: oklch(66% 0.02 240);
+  --soft: oklch(67% 0.02 240);
   --pop: oklch(74% 0.15 18);
   --hi: oklch(82% 0.15 95);
   --hi-ink: oklch(82% 0.15 95);
@@ -67,7 +76,7 @@
 :root[data-theme="light"] .swatch[data-accent="Terracotta"] {
   --ink: oklch(32% 0.05 45);
   --body: oklch(46% 0.04 45);
-  --soft: oklch(51% 0.04 45);
+  --soft: oklch(49% 0.04 45);
   --pop: oklch(56% 0.15 40);
   --hi: oklch(88% 0.11 75);
   --hi-ink: oklch(70% 0.13 60);
@@ -77,7 +86,7 @@
 :root[data-theme="dark"] .swatch[data-accent="Terracotta"] {
   --ink: oklch(93% 0.012 70);
   --body: oklch(79% 0.015 60);
-  --soft: oklch(64% 0.015 60);
+  --soft: oklch(67% 0.015 60);
   --pop: oklch(73% 0.13 45);
   --hi: oklch(80% 0.12 75);
   --hi-ink: oklch(80% 0.12 75);
@@ -86,8 +95,8 @@
 :root[data-theme="light"][data-accent="Rosa"],
 :root[data-theme="light"] .swatch[data-accent="Rosa"] {
   --ink: oklch(36% 0.09 350);
-  --body: oklch(48% 0.06 350);
-  --soft: oklch(51% 0.06 350);
+  --body: oklch(46.5% 0.06 350);
+  --soft: oklch(49.5% 0.06 350);
   --pop: oklch(62% 0.16 355);
   --hi: oklch(88% 0.09 350);
   --hi-ink: oklch(72% 0.14 350);
@@ -97,7 +106,7 @@
 :root[data-theme="dark"] .swatch[data-accent="Rosa"] {
   --ink: oklch(93% 0.018 350);
   --body: oklch(80% 0.02 345);
-  --soft: oklch(66% 0.025 345);
+  --soft: oklch(67.5% 0.025 345);
   --pop: oklch(78% 0.13 355);
   --hi: oklch(82% 0.11 350);
   --hi-ink: oklch(82% 0.11 350);
@@ -106,8 +115,8 @@
 :root[data-theme="light"][data-accent="Olive"],
 :root[data-theme="light"] .swatch[data-accent="Olive"] {
   --ink: oklch(34% 0.05 140);
-  --body: oklch(46% 0.04 140);
-  --soft: oklch(50% 0.04 140);
+  --body: oklch(45% 0.04 140);
+  --soft: oklch(48% 0.04 140);
   --pop: oklch(52% 0.12 150);
   --hi: oklch(88% 0.13 105);
   --hi-ink: oklch(68% 0.13 115);
@@ -117,7 +126,7 @@
 :root[data-theme="dark"] .swatch[data-accent="Olive"] {
   --ink: oklch(93% 0.015 110);
   --body: oklch(79% 0.015 130);
-  --soft: oklch(64% 0.015 130);
+  --soft: oklch(67% 0.015 130);
   --pop: oklch(74% 0.12 145);
   --hi: oklch(80% 0.13 105);
   --hi-ink: oklch(80% 0.13 105);
@@ -160,30 +169,6 @@
 }
 :root[data-accent="Olive"] .accent-name[data-accent="Olive"] {
   display: inline;
-}
-
-/* ============================================================================
-   Tailwind theme: expose the tokens as utilities (`text-ink`, `bg-hi`, ...).
-   `inline` makes utilities read the variables directly, so they follow the
-   data-attribute overrides above.
-   ========================================================================= */
-@theme inline {
-  --color-bg: var(--bg);
-  --color-hairline: var(--hairline);
-  --color-row-hover: var(--row-hover);
-  --color-track: var(--track);
-  --color-code-bg: var(--code-bg);
-  --color-ink: var(--ink);
-  --color-body: var(--body);
-  --color-soft: var(--soft);
-  --color-pop: var(--pop);
-  --color-hi: var(--hi);
-  --color-hi-ink: var(--hi-ink);
-  --color-on-hi: var(--on-hi);
-  --color-on-pop: var(--on-pop);
-
-  --font-sans: var(--font-familjen-grotesk), sans-serif;
-  --font-mono: var(--font-ibm-plex-mono), monospace;
 }
 
 /* ============================================================================
@@ -280,13 +265,57 @@
    Base
    ========================================================================= */
 @layer base {
+  /* Minimal reset (what the site relied on from a CSS framework before). */
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    border: 0 solid;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-size: inherit;
+    font-weight: inherit;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: inherit;
+  }
+
+  ol,
+  ul {
+    list-style: none;
+  }
+
+  svg {
+    display: block;
+    vertical-align: middle;
+  }
+
+  button {
+    font: inherit;
+    letter-spacing: inherit;
+    color: inherit;
+    background: transparent;
+  }
+
   html {
+    line-height: 1.5;
     -webkit-text-size-adjust: 100%;
     scroll-behavior: smooth;
+    /* Keeps focused and anchored elements clear of the sticky header. */
+    scroll-padding-top: 80px;
   }
 
   body {
-    margin: 0;
     background: var(--bg);
     color: var(--ink);
     font-family: var(--font-sans);
@@ -383,6 +412,16 @@
     line-height: 1.85;
     color: var(--body);
     max-width: 70ch;
+  }
+
+  /* Text for assistive technology only. */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
   }
 
   .underline-hi {

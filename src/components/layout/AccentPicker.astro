@@ -3,8 +3,8 @@ import { ACCENTS } from "../../data/site";
 ---
 
 <div class="picker">
-	<span class="label">Accent</span>
-	<div class="swatches" role="group" aria-label="Accent colour">
+	<span class="label" id="accent-label">Accent</span>
+	<div class="swatches" role="group" aria-labelledby="accent-label">
 		{
 			ACCENTS.map((name) => (
 				<button

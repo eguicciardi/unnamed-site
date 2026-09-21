@@ -25,7 +25,11 @@ const archive = excerpt !== undefined;
 		<h3 class="row-title">
 			<span class="star" aria-hidden="true">✦</span>{title}
 		</h3>
-		<span class="domain">{domainOf(url)} ↗</span>
+		<span class="domain">
+			{domainOf(url)}
+			<span aria-hidden="true">↗</span>
+			<span class="sr-only">(opens in a new tab)</span>
+		</span>
 	</div>
 	<p class="meta author">posted by {author}</p>
 	{excerpt && <p class="excerpt">{excerpt}</p>}

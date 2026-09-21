@@ -1,12 +1,11 @@
 import js from "@eslint/js";
 import globals from "globals";
 import tseslint from "typescript-eslint";
-import pluginReact from "eslint-plugin-react";
 import eslintPluginAstro from "eslint-plugin-astro";
 import { defineConfig } from "eslint/config";
 
 export default defineConfig([
-  { ignores: ["dist/", ".astro/"] },
+  { ignores: ["dist/", ".astro/", "design_handoff_guicciardi_net/", "inspo/"] },
 
   // Scoped to JS/TS on purpose: these configs set a parser, and left unscoped
   // they override the Astro parser on .astro files, which then fail to parse.
@@ -17,12 +16,6 @@ export default defineConfig([
     languageOptions: {
       globals: { ...globals.browser, ...globals.node },
     },
-  },
-
-  {
-    files: ["**/*.{jsx,tsx}"],
-    extends: [pluginReact.configs.flat.recommended],
-    settings: { react: { version: "detect" } },
   },
 
   // Must stay last so nothing downstream replaces the Astro parser.

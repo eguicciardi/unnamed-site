@@ -20,7 +20,7 @@ const links = await getLinks();
 	title="Posts · Emanuele Guicciardi"
 	description="Everything I've written and read: notes from my own work and a linkblog."
 	ambient={{ seed: 23, count: 14, maxSize: 28 }}
-	onPosts
+	current="posts"
 >
 	<div class="column">
 		<div class="crumbs">
@@ -36,8 +36,8 @@ const links = await getLinks();
 		</header>
 
 		<div class="jumps">
-			<a href="#writing">↓ Writing</a>
-			<a href="#reading">↓ Reading list</a>
+			<a href="#writing"><span aria-hidden="true">↓</span> Writing</a>
+			<a href="#reading"><span aria-hidden="true">↓</span> Reading list</a>
 		</div>
 
 		<section id="writing" class="block">
@@ -144,7 +144,7 @@ const links = await getLinks();
 			border-color 0.2s ease;
 	}
 	.jumps a:hover {
-		color: var(--pop);
+		color: var(--pop-text);
 		border-color: var(--pop);
 	}
 

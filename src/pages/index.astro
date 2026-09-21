@@ -45,7 +45,10 @@ const links = (await getLinks()).slice(0, 4);
 					class="underline-hi"
 					href={site.current.employerUrl}
 					target="_blank"
-					rel="noopener">{site.current.employer}</a
+					rel="noopener"
+					>{site.current.employer}<span class="sr-only">
+						(opens in a new tab)</span
+					></a
 				>{" "}
 				— {site.current.location}<br />{site.current.summary}
 			</p>
@@ -110,7 +113,9 @@ const links = (await getLinks()).slice(0, 4);
 				))
 			}
 		</div>
-		<a class="all underline-hi" href="/posts">All posts →</a>
+		<a class="all underline-hi" href="/posts"
+			>All posts <span aria-hidden="true">→</span></a
+		>
 	</section>
 </Base>
 
@@ -266,6 +271,6 @@ const links = (await getLinks()).slice(0, 4);
 		transition: color 0.2s ease;
 	}
 	.all:hover {
-		color: var(--pop);
+		color: var(--pop-text);
 	}
 </style>

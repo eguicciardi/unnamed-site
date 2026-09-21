@@ -1,43 +1,61 @@
-# Astro Starter Kit: Minimal
+# guicciardi.net
 
-```sh
-pnpm create astro@latest -- --template minimal
-```
+Personal site of Emanuele Guicciardi, built with [Astro](https://astro.build).
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## Commands
 
-## 🚀 Project Structure
+Run from the root of the project.
 
-Inside of your Astro project, you'll see the following folders and files:
+| Command        | Action                                   |
+| :------------- | :--------------------------------------- |
+| `pnpm install` | Install dependencies                     |
+| `pnpm dev`     | Start the dev server at `localhost:4321` |
+| `pnpm build`   | Build the production site to `./dist/`   |
+| `pnpm preview` | Preview the production build locally     |
+
+## Structure
 
 ```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+src/
+  components/   Astro components (layout/ holds the header, footer and toggles)
+  content/      writing/ (Markdown posts) and links.json (the linkblog)
+  data/         Site copy and the list of accents
+  layouts/      Base.astro
+  lib/          Content helpers (sorting, reading time, date formats)
+  pages/        Home, /posts, /posts/[slug] and /rss.xml
+  scripts/      Client side preference handling
+  styles/       global.css, with the design tokens and palettes
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+## Content
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+Posts are Markdown files in `src/content/writing/`. The front matter is
+validated by the schema in `src/content.config.ts`: `title`, `date`, `excerpt`
+are required, `category`, `tags` and `draft` are optional. Drafts show up in the
+dev server only. Reading time is computed from the body.
 
-Any static assets, like images, can be placed in the `public/` directory.
+Linkblog entries are objects in `src/content/links.json`, each with a unique
+`id`.
 
-## 🧞 Commands
+## Preferences and theming
 
-All commands are run from the root of the project, from a terminal:
+Theme, accent and animations are stored in `localStorage` (`gnet-theme`,
+`gnet-accent`, `gnet-motion`) and applied as `data-theme`, `data-accent` and
+`data-motion` on `<html>` before first paint. Every palette lives in
+`src/styles/global.css` as CSS custom properties in `oklch()`.
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `pnpm install`             | Installs dependencies                            |
-| `pnpm dev`             | Starts local dev server at `localhost:4321`      |
-| `pnpm build`           | Build your production site to `./dist/`          |
-| `pnpm preview`         | Preview your build locally, before deploying     |
-| `pnpm astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `pnpm astro -- --help` | Get help using the Astro CLI                     |
+Text colours are kept at WCAG 2.1 AA or better in every palette and theme. When
+editing a palette, check the contrast of `body` and `soft` on the paper and
+hovered row backgrounds, and of `pop-text` where an accent is used for small text.
 
-## 👀 Want to learn more?
+## Environment variables
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+Copy `.env.example` to `.env` for local use. All variables are optional.
+
+| Variable           | Purpose                                              |
+| :----------------- | :--------------------------------------------------- |
+| `UMAMI_SCRIPT_URL` | URL of the Umami tracker script (must be `https://`) |
+| `UMAMI_WEBSITE_ID` | Umami website id                                     |
+
+The tracking script is rendered only when both are set. They are inlined into
+the HTML at build time, so define them in the environment of the build.

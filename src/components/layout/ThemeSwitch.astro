@@ -10,7 +10,8 @@ const moon = "M20.5 14.6A8.6 8.6 0 0 1 9.4 3.5a8.6 8.6 0 1 0 11.1 11.1z";
 	type="button"
 	class="switch"
 	data-theme-switch
-	aria-label="Toggle dark mode"
+	aria-label="Dark mode"
+	aria-pressed="false"
 	title="Light / dark"
 >
 	<span class="dim left">
@@ -76,12 +77,15 @@ const moon = "M20.5 14.6A8.6 8.6 0 0 1 9.4 3.5a8.6 8.6 0 1 0 11.1 11.1z";
 <script>
 	import { setPreference } from "../../scripts/preferences";
 
-	document
-		.querySelector("[data-theme-switch]")
-		?.addEventListener("click", () => {
-			const dark = document.documentElement.dataset.theme === "dark";
-			setPreference("theme", dark ? "light" : "dark");
-		});
+	const button = document.querySelector("[data-theme-switch]");
+	const isDark = () => document.documentElement.dataset.theme === "dark";
+	const sync = () => button?.setAttribute("aria-pressed", String(isDark()));
+
+	button?.addEventListener("click", () => {
+		setPreference("theme", isDark() ? "light" : "dark");
+		sync();
+	});
+	sync();
 </script>
 
 <style>
@@ -92,7 +96,7 @@ const moon = "M20.5 14.6A8.6 8.6 0 0 1 9.4 3.5a8.6 8.6 0 1 0 11.1 11.1z";
 		width: 62px;
 		height: 30px;
 		padding: 0;
-		border: 1px solid var(--hairline);
+		border: 1px solid var(--control);
 		border-radius: 15px;
 		background: var(--track);
 		cursor: pointer;

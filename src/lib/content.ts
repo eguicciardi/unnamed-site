@@ -1,7 +1,6 @@
 import { getCollection, type CollectionEntry } from "astro:content";
 
-export type WritingEntry = CollectionEntry<"writing">;
-export type LinkEntry = CollectionEntry<"links">;
+type WritingEntry = CollectionEntry<"writing">;
 
 const byDateDesc = <T extends { data: { date: Date } }>(a: T, b: T) =>
   b.data.date.getTime() - a.data.date.getTime();

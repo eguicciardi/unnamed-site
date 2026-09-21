@@ -1,11 +1,11 @@
 <div class="motion">
-	<span class="label">Animations</span>
+	<span class="label" id="motion-label">Animations</span>
 	<button
 		type="button"
 		class="track"
 		role="switch"
 		aria-checked="true"
-		aria-label="Background animations"
+		aria-labelledby="motion-label"
 		data-motion-toggle
 	>
 		<span class="knob"></span>
@@ -49,7 +49,7 @@
 		width: 44px;
 		height: 24px;
 		padding: 0;
-		border: 1px solid var(--hairline);
+		border: 1px solid var(--control);
 		border-radius: 12px;
 		background: var(--track);
 		cursor: pointer;
@@ -71,6 +71,6 @@
 
 	:global(:root[data-motion="off"]) .knob {
 		left: 2px;
-		background: var(--knob-off);
+		background: var(--control);
 	}
 </style>

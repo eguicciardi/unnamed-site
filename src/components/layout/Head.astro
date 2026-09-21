@@ -1,5 +1,6 @@
 ---
 import { Font } from "astro:assets";
+import { UMAMI_SCRIPT_URL, UMAMI_WEBSITE_ID } from "astro:env/client";
 import { ACCENTS, site } from "../../data/site";
 
 interface Props {
@@ -29,12 +30,16 @@ const { title, description } = Astro.props;
 	href={site.rss}
 />
 
-<!-- Umami analytics. `is:inline` keeps Astro from bundling or rewriting the tag. -->
-<script
-	is:inline
-	defer
-	src="https://stats.guicciardi.net/script.js"
-	data-website-id="1170eb65-a7d0-4a38-bb8e-174146f8b1d6"></script>
+{
+	UMAMI_SCRIPT_URL && UMAMI_WEBSITE_ID && (
+		<script
+			is:inline
+			defer
+			src={UMAMI_SCRIPT_URL}
+			data-website-id={UMAMI_WEBSITE_ID}
+		/>
+	)
+}
 
 {
 	/*
