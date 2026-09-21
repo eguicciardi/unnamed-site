@@ -26,3 +26,6 @@ pnpm-debug.log*
 # Design references, not part of the site
 design_handoff_guicciardi_net/
 inspo/
+
+# Nova editor settings
+.nova/
